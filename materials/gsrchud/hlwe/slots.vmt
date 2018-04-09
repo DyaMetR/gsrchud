@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+   "$basetexture" "gsrchud/hlwe/slots"
+   "$additive" "1"
+   "$vertexalpha" "1"
+   "$vertexcolor" "1"
+}

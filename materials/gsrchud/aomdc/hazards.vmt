@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+   "$basetexture" "gsrchud/aomdc/hazards"
+   "$additive" "1"
+   "$vertexalpha" "1"
+   "$vertexcolor" "1"
+}
