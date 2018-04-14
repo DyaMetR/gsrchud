@@ -96,9 +96,18 @@ if CLIENT then
       end
     end
 
-    surface.SetTexture(surface.GetTextureID(self:GetWeaponIcon(weapon:GetClass())));
+    local texture = surface.GetTextureID(self:GetWeaponIcon(weapon:GetClass()));
+    surface.SetTexture(texture);
     surface.SetDrawColor(Color(color.r + 255 * add, color.g + 255 * add, color.b + 255 * add, color.a * (alpha/255)));
-    surface.DrawTexturedRectUV(x, y - sH * (scale - 1), sW * scale, sH * scale, 0, 0, cW/w, cH/h);
+    if (not self:IsIconNotSlotSized(weapon:GetClass())) then
+      surface.DrawTexturedRectUV(x, y - sH * (scale - 1), sW * scale, sH * scale, 0, 0, cW/w, cH/h);
+    else
+      local tW, tH = surface.GetTextureSize(texture);
+      w, h = math.Clamp(tW, 0, 128) * scale, math.Clamp(tH, 0, 64) * scale;
+      x = x + (sW * scale/2) - (w/2);
+      y = y - sH * (scale - 1);
+      surface.DrawTexturedRectUV(x, y, w, h - 20 * scale, 0, 0.15, 1, 1 - 0.15);
+    end
   end
 
   --[[

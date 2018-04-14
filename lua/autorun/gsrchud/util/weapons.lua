@@ -20,10 +20,12 @@ if CLIENT then
     Adds a texture to the list
     @param {string} weapon
     @param {string} texture
+    @param {boolean|null} notSlotSized
     @void
   ]]
-  function GSRCHUD:AddWeaponIcon(weapon, texture)
-    self.Weapons[weapon] = texture;
+  function GSRCHUD:AddWeaponIcon(weapon, texture, notSlotSized)
+    notSlotSized = notSlotSized or false;
+    self.Weapons[weapon] = {texture = texture, notSlotSized = notSlotSized};
   end
 
   --[[
@@ -32,7 +34,16 @@ if CLIENT then
     @return {string} texture
   ]]
   function GSRCHUD:GetWeaponIcon(weapon)
-    return self.Weapons[weapon] or nil;
+    return self.Weapons[weapon].texture or nil;
+  end
+
+  --[[
+    Returns whether the texture has the dimensions of a weapon slot
+    @param {string} weapon
+    @return {boolean} isSlotSized
+  ]]
+  function GSRCHUD:IsIconNotSlotSized(weapon)
+    return self.Weapons[weapon].notSlotSized or false;
   end
 
   --[[
