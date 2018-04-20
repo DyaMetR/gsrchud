@@ -5,13 +5,13 @@
 if CLIENT then
   local theme = "Weapon Edition"; -- Theme name
 
-  local file = {filename = "gsrchud/hlwe/main", w = 256, h = 128};
-  local file_slots = {filename = "gsrchud/hlwe/slots", w = 128, h = 512};
-  local file_misc = {filename = "gsrchud/hlwe/misc", w = 256, h = 128};
-  local pain_0 = {filename = "gsrchud/hlwe/pain_0", w = 128, h = 64};
-  local pain_1 = {filename = "gsrchud/hlwe/pain_1", w = 128, h = 128};
-  local pain_2 = {filename = "gsrchud/hlwe/pain_2", w = 256, h = 64};
-  local pain_3 = {filename = "gsrchud/hlwe/pain_3", w = 128, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/hlwe/main"), w = 256, h = 128};
+  local file_slots = {filename = surface.GetTextureID("gsrchud/hlwe/slots"), w = 128, h = 512};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/hlwe/misc"), w = 256, h = 128};
+  local pain_0 = {filename = surface.GetTextureID("gsrchud/hlwe/pain_0"), w = 128, h = 64};
+  local pain_1 = {filename = surface.GetTextureID("gsrchud/hlwe/pain_1"), w = 128, h = 128};
+  local pain_2 = {filename = surface.GetTextureID("gsrchud/hlwe/pain_2"), w = 256, h = 64};
+  local pain_3 = {filename = surface.GetTextureID("gsrchud/hlwe/pain_3"), w = 128, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 21, file = file},

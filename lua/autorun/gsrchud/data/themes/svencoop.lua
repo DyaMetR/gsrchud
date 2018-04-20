@@ -5,7 +5,7 @@
 if CLIENT then
   local theme = "Sven Co-op"; -- Theme name
 
-  local file = {filename = "gsrchud/svencoop/main", w = 256, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/svencoop/main"), w = 256, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 20, file = file},

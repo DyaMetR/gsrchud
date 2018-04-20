@@ -5,8 +5,8 @@
 if CLIENT then
   local theme = "CS:CZ Deleted Scenes"; -- Theme name
 
-  local file = {filename = "gsrchud/cszeror/main", w = 256, h = 256};
-  local file_misc = {filename = "gsrchud/cszeror/misc", w = 256, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/cszeror/main"), w = 256, h = 256};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/cszeror/misc"), w = 256, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 24, file = file},

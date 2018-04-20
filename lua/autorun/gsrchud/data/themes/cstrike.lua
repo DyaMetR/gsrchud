@@ -6,8 +6,8 @@ if CLIENT then
   local theme = "Counter-Strike"; -- Theme name
 
   -- Files required
-  local file = {filename = "gsrchud/cstrike/main", w = 256, h = 256};
-  local file_misc = {filename = "gsrchud/cstrike/misc", w = 256, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/cstrike/main"), w = 256, h = 256};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/cstrike/misc"), w = 256, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 24, file = file},

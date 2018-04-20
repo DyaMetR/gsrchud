@@ -6,13 +6,13 @@ if CLIENT then
   local theme = "Afraid of Monsters"; -- Theme name
 
   -- Files required
-  local file = {filename = "gsrchud/aomdc/main", w = 256, h = 128};
-  local file_hazard = {filename = "gsrchud/aomdc/hazards", w = 256, h = 128};
-  local file_misc = {filename = "gsrchud/aomdc/misc", w = 256, h = 128};
-  local pain_0 = {filename = "gsrchud/aomdc/pain_0", w = 128, h = 64};
-  local pain_1 = {filename = "gsrchud/aomdc/pain_1", w = 64, h = 128};
-  local pain_2 = {filename = "gsrchud/aomdc/pain_2", w = 128, h = 64};
-  local pain_3 = {filename = "gsrchud/aomdc/pain_3", w = 64, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/aomdc/main"), w = 256, h = 128};
+  local file_hazard = {filename = surface.GetTextureID("gsrchud/aomdc/hazards"), w = 256, h = 128};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/aomdc/misc"), w = 256, h = 128};
+  local pain_0 = {filename = surface.GetTextureID("gsrchud/aomdc/pain_0"), w = 128, h = 64};
+  local pain_1 = {filename = surface.GetTextureID("gsrchud/aomdc/pain_1"), w = 64, h = 128};
+  local pain_2 = {filename = surface.GetTextureID("gsrchud/aomdc/pain_2"), w = 128, h = 64};
+  local pain_3 = {filename = surface.GetTextureID("gsrchud/aomdc/pain_3"), w = 64, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 24, file = file},

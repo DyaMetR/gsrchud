@@ -6,13 +6,13 @@ if CLIENT then
   local theme = "Opposing Force"; -- Theme name
 
   -- Files required
-  local file = {filename = "gsrchud/opforce/main", w = 256, h = 128};
-  local file_hazard = {filename = "gsrchud/opforce/hazards", w = 256, h = 128};
-  local file_misc = {filename = "gsrchud/opforce/misc", w = 256, h = 128};
-  local pain_0 = {filename = "gsrchud/opforce/pain_0", w = 128, h = 64};
-  local pain_1 = {filename = "gsrchud/opforce/pain_1", w = 64, h = 128};
-  local pain_2 = {filename = "gsrchud/opforce/pain_2", w = 128, h = 64};
-  local pain_3 = {filename = "gsrchud/opforce/pain_3", w = 64, h = 128};
+  local file = {filename = surface.GetTextureID("gsrchud/opforce/main"), w = 256, h = 128};
+  local file_hazard = {filename = surface.GetTextureID("gsrchud/opforce/hazards"), w = 256, h = 128};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/opforce/misc"), w = 256, h = 128};
+  local pain_0 = {filename = surface.GetTextureID("gsrchud/opforce/pain_0"), w = 128, h = 64};
+  local pain_1 = {filename = surface.GetTextureID("gsrchud/opforce/pain_1"), w = 64, h = 128};
+  local pain_2 = {filename = surface.GetTextureID("gsrchud/opforce/pain_2"), w = 128, h = 64};
+  local pain_3 = {filename = surface.GetTextureID("gsrchud/opforce/pain_3"), w = 64, h = 128};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 24, file = file},

@@ -17,14 +17,14 @@ if CLIENT then
   local theme = "Half-Life"; -- Theme name
 
   -- Files required
-  local file = {filename = "gsrchud/default/main", w = 256, h = 128};
-  local file_hazard = {filename = "gsrchud/default/hazards", w = 256, h = 128};
-  local file_misc = {filename = "gsrchud/default/misc", w = 256, h = 128};
-  local pain_0 = {filename = "gsrchud/default/pain_0", w = 128, h = 64};
-  local pain_1 = {filename = "gsrchud/default/pain_1", w = 64, h = 128};
-  local pain_2 = {filename = "gsrchud/default/pain_2", w = 128, h = 64};
-  local pain_3 = {filename = "gsrchud/default/pain_3", w = 64, h = 128};
-  local small_numbers = {filename = "gsrchud/default/small_numbers", w = 128, h = 16};
+  local file = {filename = surface.GetTextureID("gsrchud/default/main"), w = 256, h = 128};
+  local file_hazard = {filename = surface.GetTextureID("gsrchud/default/hazards"), w = 256, h = 128};
+  local file_misc = {filename = surface.GetTextureID("gsrchud/default/misc"), w = 256, h = 128};
+  local pain_0 = {filename = surface.GetTextureID("gsrchud/default/pain_0"), w = 128, h = 64};
+  local pain_1 = {filename = surface.GetTextureID("gsrchud/default/pain_1"), w = 64, h = 128};
+  local pain_2 = {filename = surface.GetTextureID("gsrchud/default/pain_2"), w = 128, h = 64};
+  local pain_3 = {filename = surface.GetTextureID("gsrchud/default/pain_3"), w = 64, h = 128};
+  local small_numbers = {filename = surface.GetTextureID("gsrchud/default/small_numbers"), w = 128, h = 16};
 
   local spriteData = { -- Sprite data
     ["0"] = {x = 0, y = 0, w = 20, h = 24, file = file},

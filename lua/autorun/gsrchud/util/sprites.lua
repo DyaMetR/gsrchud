@@ -175,7 +175,7 @@ if CLIENT then
       offset = math.Clamp(yOffset + yOffset * (1 - scale), min, max);
     end
 
-    surface.SetTexture(surface.GetTextureID(material)); -- Set the texture
+    surface.SetTexture(material); -- Set the texture
     surface.SetDrawColor(color); -- Set the colour
     surface.DrawTexturedRectUV(x + xOffset, y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(w * scale), math.Round(hCut * scale), u/fW, (v + (h - hCut))/fH, (u+w)/fW, (v+h)/fH); -- Draw the sprite
   end
