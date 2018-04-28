@@ -36,7 +36,7 @@ if CLIENT then
 
   -- Hooks
   hook.Add("HUDPaint", "gsrchud_draw", function()
-    if (not GSRCHUD:IsEnabled()) then return end;
+    if (not GSRCHUD:IsEnabled() or not LocalPlayer():IsSuitEquipped()) then return end;
     for _, element in pairs(GSRCHUD:GetElements()) do
       element();
     end
