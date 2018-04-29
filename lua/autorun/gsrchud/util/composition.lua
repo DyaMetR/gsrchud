@@ -35,8 +35,15 @@ if CLIENT then
   end
 
   -- Hooks
+  local hasSuit = false;
   hook.Add("HUDPaint", "gsrchud_draw", function()
-    if (not GSRCHUD:IsEnabled() or not LocalPlayer():IsSuitEquipped()) then return end;
+    -- Check if player's wearing a suit
+    if (LocalPlayer():Alive() and LocalPlayer():Health() >= 1) then
+      hasSuit = LocalPlayer():IsSuitEquipped();
+    end
+
+    -- Draw HUD
+    if (not GSRCHUD:IsEnabled() or not hasSuit) then return end;
     for _, element in pairs(GSRCHUD:GetElements()) do
       element();
     end
