@@ -104,8 +104,8 @@ if CLIENT then
   ]]
   function GSRCHUD:HasAmmoForWeapon(weapon)
     if not IsValid(weapon) then return false end;
-	local PrimaryType = weapon:GetPrimaryAmmoType();
-	local SecondaryType = weapon:GetSecondaryAmmoType();
+	  local PrimaryType = weapon:GetPrimaryAmmoType() or 0;
+	  local SecondaryType = weapon:GetSecondaryAmmoType() or 0;
     if (PrimaryType <= 0 and SecondaryType <= 0) then return true end;
     local clip = math.Clamp(weapon:Clip1(), 0, 1);
     local primary = math.Clamp(LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType()), 0, 1);
