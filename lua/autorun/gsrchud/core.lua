@@ -342,6 +342,7 @@ GSRCHUD:IncludeFile("util/hazards.lua");
 GSRCHUD:IncludeFile("util/items.lua");
 GSRCHUD:IncludeFile("util/weapons.lua");
 GSRCHUD:IncludeFile("util/wpn_selector.lua");
+GSRCHUD:IncludeFile("util/weapon_spritesheet.lua");
 
 -- Elements to draw
 GSRCHUD:IncludeFile("elements/health.lua");

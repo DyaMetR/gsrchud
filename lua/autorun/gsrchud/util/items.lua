@@ -68,12 +68,42 @@ if CLIENT then
   end
 
   --[[
+    Draws a predefined weapon icon from a spritesheet
+    @param {number} x
+    @param {number} y
+    @param {Weapon} weapon
+    @param {number} scale
+    @param {number} alpha
+    @param {boolean} crit
+  ]]
+  function GSRCHUD:DrawWeaponIconFromSpritesheet(x, y, weapon, scale, alpha, crit)
+    if not self:HasWeaponSpritesheet(weapon:GetClass()) then return false end
+    crit = crit or false;
+
+    local add = math.Clamp(alpha - 255, 0, 255)/255;
+    local color = self:GetThemeDefaultColor(self:GetCurrentTheme());
+    if (crit) then color = self:GetThemeDefaultCritColor(self:GetCurrentTheme()); end
+    if (self:IsCustomColouringEnabled()) then
+      color = self:GetCustomSelectorColor();
+      if (crit) then color = self:GetCustomCritColor(); end
+    end
+
+    local icon = self:GetWeaponSpritesheet(weapon:GetClass());
+    local u1, v1, u2, v2 = icon.x/icon.fileW, icon.y/icon.fileH, (icon.x + icon.w)/icon.fileW, (icon.y + icon.h)/icon.fileH;
+    local w, h = icon.w * scale, icon.h * scale;
+    surface.SetDrawColor(Color(color.r + 255 * add, color.g + 255 * add, color.b + 255 * add, color.a * (alpha/255)));
+    surface.SetTexture(icon.texture);
+    surface.DrawTexturedRectUV(x - w + (w/2), y - h + (h/2), w, h, u1, v1, u2, v2);
+  end
+
+  --[[
     Draws a predefined weapon icon
     @param {number} x
     @param {number} y
     @param {Weapon} weapon
     @param {number} scale
     @param {number} alpha
+    @param {boolean} crit
   ]]
   function GSRCHUD:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit)
     if not self:HasWeaponIcon(weapon:GetClass()) then return false end
@@ -81,8 +111,8 @@ if CLIENT then
 
     local add = math.Clamp(alpha - 255, 0, 255)/255;
     local color = self:GetThemeDefaultColor(self:GetCurrentTheme());
-    if (GSRCHUD:IsCustomColouringEnabled()) then
-      color = GSRCHUD:GetCustomSelectorColor();
+    if (self:IsCustomColouringEnabled()) then
+      color = self:GetCustomSelectorColor();
     end
 
     local w, h = 256, 64; -- The file dimensions
@@ -138,10 +168,14 @@ if CLIENT then
       self:DrawSprite(x, y, SELECTED_SPRITE, scale, alpha, nil, nil, color);
     end
 
-    if (self:HasWeaponIcon(weapon:GetClass())) then
-      self:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit);
+    if (self:HasWeaponSpritesheet(weapon:GetClass())) then
+      self:DrawWeaponIconFromSpritesheet(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha, crit);
     else
-      self:DrawWeaponIcon(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha);
+      if (self:HasWeaponIcon(weapon:GetClass())) then
+        self:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit);
+      else
+        self:DrawWeaponIcon(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha);
+      end
     end
   end
 

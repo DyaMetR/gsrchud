@@ -18,4 +18,25 @@ if CLIENT then
   GSRCHUD:AddWeaponIcon("weapon_bugbait", "gsrchud/common/default_weapons/bugbait");
   GSRCHUD:AddWeaponIcon("weapon_slam", "gsrchud/common/default_weapons/slam");
   GSRCHUD:AddWeaponIcon("weapon_stunstick", "gsrchud/common/default_weapons/stunstick");
+
+  -- HL1 weapons sprite sheets -- so sorry for the delay, upset!
+  local hud1 = surface.GetTextureID("gsrchud/common/hl1_weapons_upset/640hud1");
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_crowbar", hud1, 256, 256, 0, 0, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_glock", hud1, 256, 256, 0, 45, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_357", hud1, 256, 256, 0, 90, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_mp5", hud1, 256, 256, 0, 135, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_shotgun", hud1, 256, 256, 0, 180, 170, 45);
+
+  local hud2 = surface.GetTextureID("gsrchud/common/hl1_weapons_upset/640hud2");
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_crossbow", hud2, 256, 256, 0, 0, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_rpg", hud2, 256, 256, 0, 45, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_gauss", hud2, 256, 256, 0, 90, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_egon", hud2, 256, 256, 0, 135, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_hornetgun", hud2, 256, 256, 0, 180, 170, 45);
+
+  local hud3 = surface.GetTextureID("gsrchud/common/hl1_weapons_upset/640hud3");
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_handgrenade", hud3, 256, 256, 0, 0, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_satchel", hud3, 256, 256, 0, 45, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_tripmine", hud3, 256, 256, 0, 90, 170, 45);
+  GSRCHUD:AddWeaponSpritesheet("weapon_hl1_snark", hud3, 256, 256, 0, 135, 170, 45);
 end
