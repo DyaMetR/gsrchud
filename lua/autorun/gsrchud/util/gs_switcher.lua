@@ -10,6 +10,9 @@ if CLIENT then
   local PHYSGUN = "weapon_physgun";
   local CAMERA = "gmod_camera";
 
+  --[[ Sounds ]]
+  local selectSound;
+
   --[[ Avoid selection if physgun is in use ]]--
   local physgunPickup = false;
   local lastPhysgunBeam = CurTime();
@@ -362,7 +365,9 @@ if CLIENT then
 
       -- Selector opening sound
       if (iCurSlot == 0) then
-        surface.PlaySound(START_SOUND);
+        if (selectSound != nil) then selectSound:Stop(); end
+        selectSound = CreateSound(LocalPlayer(), START_SOUND);
+        selectSound:Play();
       end
 
   		PrecacheWeps()
@@ -424,6 +429,7 @@ if CLIENT then
   			end
 
   			flSelectTime = RealTime()
+        if (selectSound != nil) then selectSound:Stop(); end
   			pPlayer:EmitSound(SELECT_SOUND)
 
   			return true
@@ -433,6 +439,7 @@ if CLIENT then
   		if (sBind == "+attack2") then
   			flSelectTime = RealTime()
   			iCurSlot = 0
+        if (selectSound != nil) then selectSound:Stop(); end
         surface.PlaySound(CANCEL_SOUND);
 
   			return true
