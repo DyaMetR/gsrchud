@@ -18,6 +18,6 @@ if CLIENT then
 
   -- Half-Life: Source ammunition types
   GSRCHUD:AddAmmoIcon("9mmRound", "pistol_ammo");
-  GSRCHUD:AddAmmoIcon("MP5_Grenade ", "smg_gren_ammo");
+  GSRCHUD:AddAmmoIcon("MP5_Grenade", "smg_gren_ammo");
   GSRCHUD:AddAmmoIcon("Hornet", "hornet_ammo");
 end
