@@ -20,6 +20,7 @@ if CLIENT then
     Adds a texture to the list
     @param {string} weapon
     @param {string} texture
+    @param {boolean|null} isSprite
     @param {boolean|null} notSlotSized
     @void
   ]]

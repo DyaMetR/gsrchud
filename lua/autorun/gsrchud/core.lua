@@ -342,7 +342,7 @@ GSRCHUD:IncludeFile("util/hazards.lua");
 GSRCHUD:IncludeFile("util/items.lua");
 GSRCHUD:IncludeFile("util/weapons.lua");
 GSRCHUD:IncludeFile("util/wpn_selector.lua");
-GSRCHUD:IncludeFile("util/weapon_spritesheet.lua");
+GSRCHUD:IncludeFile("util/sprites_custom.lua");
 
 -- Elements to draw
 GSRCHUD:IncludeFile("elements/health.lua");
@@ -353,6 +353,7 @@ GSRCHUD:IncludeFile("elements/damage.lua");
 GSRCHUD:IncludeFile("elements/death.lua");
 
 -- Load data
+GSRCHUD:IncludeFile("data/sprites.lua");
 GSRCHUD:IncludeFile("data/hazards.lua");
 GSRCHUD:IncludeFile("data/items.lua");
 GSRCHUD:IncludeFile("data/ammo.lua");

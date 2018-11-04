@@ -168,14 +168,15 @@ if CLIENT then
       self:DrawSprite(x, y, SELECTED_SPRITE, scale, alpha, nil, nil, color);
     end
 
-    if (self:HasWeaponSpritesheet(weapon:GetClass())) then
-      self:DrawWeaponIconFromSpritesheet(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha, crit);
-    else
-      if (self:HasWeaponIcon(weapon:GetClass())) then
-        self:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit);
+    if (self:HasWeaponIcon(weapon:GetClass())) then
+      local icon = self:GetWeaponIcon(weapon:GetClass());
+      if (self:HasCustomSprite(icon)) then
+        self:DrawCustomSprite(icon, x, y, scale, alpha, crit);
       else
-        self:DrawWeaponIcon(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha);
+        self:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit);
       end
+    else
+      self:DrawWeaponIcon(x + (w * scale)/2, y + ((h * scale)/2) - (h * (scale - 1)), weapon, scale, alpha);
     end
   end
 
@@ -198,7 +199,12 @@ if CLIENT then
       color = GSRCHUD:GetCustomSelectorColor();
     end
 
-    self:DrawSprite(x - w * scale, y, self:GetAmmoIcon(ammo), scale, alpha, nil, nil, color);
+    local icon = self:GetAmmoIcon(ammo);
+    if (self:HasCustomSprite(icon)) then
+      self:DrawCustomSprite(icon, x - w * scale, y, icon, scale, alpha, nil, nil, color);
+    else
+      self:DrawSprite(x - w * scale, y, icon, scale, alpha, nil, nil, color);
+    end
     self:RenderNumber(x - (w + 8) * scale, y + (nH - 8 * scale), amount, scale, crit, alpha, true, color);
   end
 
