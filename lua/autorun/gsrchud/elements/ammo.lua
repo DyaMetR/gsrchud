@@ -56,7 +56,7 @@ if CLIENT then
 
       local icon = GSRCHUD:GetAmmoIcon(ammo);
       if (GSRCHUD:HasCustomSprite(icon)) then
-        GSRCHUD:DrawCustomSprite(icon, x - 28 * scale, y - 4, scale, alpha, nil, nil, ammoColor, nil, true);
+        GSRCHUD:DrawCustomSprite(icon, x - 28 * scale, y - 4, scale, alpha, ammoColor, nil, true);
       else
         GSRCHUD:DrawSprite(x - 28 * scale, y - 4, GSRCHUD:GetAmmoIcon(ammo), scale, alpha, nil, nil, ammoColor, nil, true);
       end

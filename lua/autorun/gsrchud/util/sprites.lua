@@ -105,7 +105,7 @@ if CLIENT then
   function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap)
     overlap = overlap or false;
     if (overlap) then
-      self:RenderSprite(x, y, sprite, scale, self:GetBaseAlpha(), crit, scissor, color, limitOffset);
+      self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset);
       if (alpha > self:GetBaseAlpha()) then
         self:RenderSprite(x, y, sprite, scale, alpha - self:GetBaseAlpha(), crit, scissor, color, limitOffset);
       end

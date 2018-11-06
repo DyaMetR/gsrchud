@@ -70,7 +70,7 @@ if CLIENT then
     if #history > 0 and think < CurTime() then
       for k, entry in pairs(history) do
         if (entry.time < CurTime()) then
-          if (entry.alpha - FREQ > 0) then
+          if (entry.alpha - 0.01 > 0) then
             entry.alpha = entry.alpha - 0.01;
           else
             entry.alpha = 0;

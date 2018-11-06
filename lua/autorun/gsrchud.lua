@@ -1,8 +1,8 @@
 --[[------------
    GoldSrc Era
  Heads Up Display
-  Version 1.6.0
-    4/11/2018
+  Version 1.6.1
+    6/11/2018
 
 By DyaMetR
 ]]--------------

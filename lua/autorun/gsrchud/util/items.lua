@@ -201,7 +201,8 @@ if CLIENT then
 
     local icon = self:GetAmmoIcon(ammo);
     if (self:HasCustomSprite(icon)) then
-      self:DrawCustomSprite(icon, x - w * scale, y, icon, scale, alpha, nil, nil, color);
+      w = self:GetCustomSprite(icon).w;
+      self:DrawCustomSprite(icon, x - w * scale, y, scale, alpha, color, nil, true);
     else
       self:DrawSprite(x - w * scale, y, icon, scale, alpha, nil, nil, color);
     end

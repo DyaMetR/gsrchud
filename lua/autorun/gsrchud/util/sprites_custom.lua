@@ -55,13 +55,13 @@ if CLIENT then
     @param {number} alpha
     @param {boolean} crit
   ]]
-  function GSRCHUD:DrawCustomSprite(id, x, y, scale, alpha, crit)
+  function GSRCHUD:RenderCustomSprite(id, x, y, scale, alpha, color, crit)
     if not self:HasCustomSprite(id) then return; end
+    color = color or self:GetThemeDefaultColor(self:GetCurrentTheme());
     scale = scale or 1;
     crit = crit or false;
 
     local add = math.Clamp(alpha - 255, 0, 255)/255;
-    local color = self:GetThemeDefaultColor(self:GetCurrentTheme());
     if (crit) then color = self:GetThemeDefaultCritColor(self:GetCurrentTheme()); end
     if (self:IsCustomColouringEnabled()) then
       color = self:GetCustomSelectorColor();
@@ -74,6 +74,30 @@ if CLIENT then
     surface.SetDrawColor(Color(color.r + 255 * add, color.g + 255 * add, color.b + 255 * add, color.a * (alpha/255)));
     surface.SetTexture(icon.texture);
     surface.DrawTexturedRectUV(x, y, w, h, u1, v1, u2, v2);
+  end
+
+  --[[
+    Draws a custom sprite, overlaps it if indicated
+    @param {string} id
+    @param {number} x
+    @param {number} y
+    @param {number} scale
+    @param {number} alpha
+    @param {boolean} crit
+    @param {boolean} overlap
+    @void
+  ]]
+  function GSRCHUD:DrawCustomSprite(id, x, y, scale, alpha, color, crit, overlap)
+    overlap = overlap or false;
+    if (overlap) then
+      print(alpha)
+      self:RenderCustomSprite(id, x, y, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), color, crit);
+      if (alpha > self:GetBaseAlpha()) then
+        self:RenderCustomSprite(id, x, y, scale, alpha - self:GetBaseAlpha(), color, crit);
+      end
+    else
+      self:RenderCustomSprite(id, x, y, scale, alpha, color, crit);
+    end
   end
 
 end
