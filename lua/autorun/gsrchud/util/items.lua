@@ -171,7 +171,7 @@ if CLIENT then
     if (self:HasWeaponIcon(weapon:GetClass())) then
       local icon = self:GetWeaponIcon(weapon:GetClass());
       if (self:HasCustomSprite(icon)) then
-        self:DrawCustomSprite(icon, x, y, scale, alpha, crit);
+        self:DrawCustomSprite(icon, x, y, scale, alpha, color, crit);
       else
         self:DrawDefaultWeaponIcon(x, y, weapon, scale, alpha, crit);
       end

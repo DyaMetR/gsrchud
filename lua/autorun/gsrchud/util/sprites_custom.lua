@@ -90,7 +90,6 @@ if CLIENT then
   function GSRCHUD:DrawCustomSprite(id, x, y, scale, alpha, color, crit, overlap)
     overlap = overlap or false;
     if (overlap) then
-      print(alpha)
       self:RenderCustomSprite(id, x, y, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), color, crit);
       if (alpha > self:GetBaseAlpha()) then
         self:RenderCustomSprite(id, x, y, scale, alpha - self:GetBaseAlpha(), color, crit);
