@@ -120,7 +120,7 @@ if SERVER then
   local DISTANCE = 100;
 
   hook.Add("EntityTakeDamage", "gsrchud_damage", function(target, dmginfo)
-    if (table.HasValue(override, dmginfo:GetDamageType())) then return end;
+    if (table.HasValue(override, dmginfo:GetDamageType()) or dmginfo:GetDamage() <= 0) then return end;
     if (target:IsPlayer() and IsValid(dmginfo:GetAttacker())) then
       local origin = dmginfo:GetAttacker():GetPos(); -- Position of the attacker
   		local noHeight = Vector(target:GetPos().x, target:GetPos().y, 0); -- Ignore height, this is only for the direction

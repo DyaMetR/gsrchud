@@ -43,7 +43,8 @@ if CLIENT then
     end
 
     -- Draw HUD
-    if (not GSRCHUD:IsEnabled() or not hasSuit) then return end;
+    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
+    if ((hasOverride and not isOverriden) or (not hasOverride and not GSRCHUD:IsEnabled()) or not hasSuit) then return end;
     for _, element in pairs(GSRCHUD:GetElements()) do
       element();
     end

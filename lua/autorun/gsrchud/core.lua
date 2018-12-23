@@ -2,7 +2,9 @@
   CORE ELEMENTS
 ]]
 
--- Current theme
+-- Add the override
+GSRCHUD:IncludeFile("util/override.lua");
+
 if CLIENT then
   -- Paramteres
   GSRCHUD.DefaultConfig = {
@@ -327,7 +329,8 @@ if CLIENT then
     hide["CHudSecondaryAmmo"] = GSRCHUD:IsAmmoEnabled();
     hide["CHudPoisonDamageIndicator"] = GSRCHUD:IsHazardEnabled();
     hide["CHudHistoryResource"] = GSRCHUD:IsPickupEnabled();
-  	if ( hide[ name ] and GSRCHUD:IsEnabled() ) then return false end;
+    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
+  	if ( hide[ name ] and (GSRCHUD:IsEnabled() or (hasOverride and isOverriden)) ) then return false end;
   end )
 
 end
