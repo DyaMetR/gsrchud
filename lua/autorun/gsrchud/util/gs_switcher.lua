@@ -109,6 +109,9 @@ if CLIENT then
   local cl_drawhud = GetConVar("cl_drawhud")
 
   hook.Add("HUDPaint", "GS_WeaponSelector", function()
+    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
+    if (hasOverride and not isOverriden) then return; end
+
   	if (iCurSlot == 0 or not cl_drawhud:GetBool() or not GSRCHUD:IsEnabled() or not GSRCHUD:IsWeaponSelectorEnabled()) then
   		return
   	end
@@ -189,6 +192,9 @@ if CLIENT then
   end
 
   hook.Add("PlayerBindPress", "GS_WeaponSelector", function(pPlayer, sBind, bPressed)
+    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
+    if (hasOverride and not isOverriden) then return; end
+    
   	if (not pPlayer:Alive() or pPlayer:InVehicle() and not pPlayer:GetAllowWeaponsInVehicle() or GetConVar("hud_fastswitch"):GetInt() == 1 or not GSRCHUD:IsEnabled() or not GSRCHUD:IsWeaponSelectorEnabled() or (not pPlayer:GetActiveWeapon():IsValid() or (pPlayer:GetActiveWeapon():IsValid() and pPlayer:GetActiveWeapon():GetClass() == PHYSGUN and physgunPickup and table.HasValue({"invprev", "invnext"}, sBind)))) then
   		return
   	end
