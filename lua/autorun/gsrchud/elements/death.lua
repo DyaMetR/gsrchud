@@ -13,8 +13,6 @@ if CLIENT then
 
   -- Hooks
   local function Death()
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-    if (hasOverride and not isOverriden) then return; end
     if not (GSRCHUD:IsDeathScreenEnabled() and GSRCHUD:IsEnabled()) then return; end
     if not LocalPlayer():Alive() then
       local tr = util.TraceLine( {
@@ -45,9 +43,6 @@ if CLIENT then
   hook.Add("Think", "gsrchud_deathscreen", Death);
 
   local function Camera( ply, origin, angles, fov, znear, zfar )
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-    if (hasOverride and not isOverriden) then return; end
-    
     if LocalPlayer():Alive() or not (GSRCHUD:IsDeathScreenEnabled() and GSRCHUD:IsEnabled()) then return end;
     local view = {};
 

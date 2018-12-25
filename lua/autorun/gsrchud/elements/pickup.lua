@@ -149,8 +149,6 @@ if CLIENT then
     HOOKS
   ]]
   hook.Add("HUDAmmoPickedUp", "gsrchud_ammo_pickup", function(itemName, amount)
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-    if (hasOverride and not isOverriden) then return; end
     if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
       AddAmmoIcon(itemName, amount);
       return true;
@@ -158,8 +156,6 @@ if CLIENT then
   end);
 
   hook.Add("HUDWeaponPickedUp", "gsrchud_weapon_pickup", function(weapon)
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-    if (hasOverride and not isOverriden) then return; end
     if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
       AddWeaponIcon(weapon);
       return true;
@@ -167,8 +163,6 @@ if CLIENT then
   end);
 
   hook.Add("HUDItemPickedUp", "gsrchud_item_pickup", function(itemName)
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-    if (hasOverride and not isOverriden) then return; end
     if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
       AddItemIcon(itemName);
       return true;

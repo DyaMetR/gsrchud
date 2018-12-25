@@ -88,7 +88,8 @@ if CLIENT then
     @return {boolean} isEnabled
   ]]
   function GSRCHUD:IsEnabled()
-    return self.Enabled:GetInt() > 0;
+    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
+    return (hasOverride and isOverriden) or (not hasOverride and self.Enabled:GetInt() > 0);
   end
 
   --[[
@@ -329,8 +330,7 @@ if CLIENT then
     hide["CHudSecondaryAmmo"] = GSRCHUD:IsAmmoEnabled();
     hide["CHudPoisonDamageIndicator"] = GSRCHUD:IsHazardEnabled();
     hide["CHudHistoryResource"] = GSRCHUD:IsPickupEnabled();
-    local hasOverride, isOverriden = GSRCHUD:IsHUDOverriden();
-  	if ( hide[ name ] and ((hasOverride and isOverriden) or (not hasOverride and GSRCHUD:IsEnabled()))) then return false end;
+  	if ( hide[ name ] and GSRCHUD:IsEnabled()) then return false end;
   end )
 
 end
