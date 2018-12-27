@@ -6,15 +6,17 @@ if CLIENT then
 
   local function Ammo()
     if (not GSRCHUD:IsAmmoEnabled()) then return true end;
-    if not IsValid(LocalPlayer():GetActiveWeapon()) or (LocalPlayer():GetActiveWeapon():GetPrimaryAmmoType() <= -1 and LocalPlayer():GetActiveWeapon():GetSecondaryAmmoType() <= -1) then return end;
+
+    local localPlayer = GSRCHUD:GetLocalPlayer();
+    if not IsValid(localPlayer:GetActiveWeapon()) or (localPlayer:GetActiveWeapon():GetPrimaryAmmoType() <= -1 and localPlayer:GetActiveWeapon():GetSecondaryAmmoType() <= -1) then return; end
     local scale = GSRCHUD:GetHUDScale();
     local x, y = ScrW() - 10, ScrH() - 40;
-    local weapon = LocalPlayer():GetActiveWeapon();
+    local weapon = localPlayer:GetActiveWeapon();
     local primary = weapon:GetPrimaryAmmoType();
     local secondary = weapon:GetSecondaryAmmoType();
     local clip = weapon:Clip1();
-    local reserve = LocalPlayer():GetAmmoCount(primary);
-    local alt = LocalPlayer():GetAmmoCount(secondary);
+    local reserve = localPlayer:GetAmmoCount(primary);
+    local alt = localPlayer:GetAmmoCount(secondary);
 
     local clipColor = nil;
     local ammoColor = nil;

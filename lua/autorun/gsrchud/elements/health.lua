@@ -6,10 +6,11 @@ if CLIENT then
 
   local function Health()
     if (not GSRCHUD:IsHealthEnabled()) then return true end;
+    local localPlayer = GSRCHUD:GetLocalPlayer();
     local scale = GSRCHUD:GetHUDScale();
     local x, y = 10, ScrH() - 40;
-    local hp = LocalPlayer():Health();
-    local ap = LocalPlayer():Armor();
+    local hp = localPlayer:Health();
+    local ap = localPlayer:Armor();
     local crit = (hp <= 25);
 
     local hpColor = nil;

@@ -336,6 +336,7 @@ if CLIENT then
 end
 
 -- Utils
+GSRCHUD:IncludeFile("util/spectate_block.lua");
 GSRCHUD:IncludeFile("util/themes.lua");
 GSRCHUD:IncludeFile("util/sprites.lua");
 GSRCHUD:IncludeFile("util/numbers.lua");
