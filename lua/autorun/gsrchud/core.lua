@@ -4,6 +4,7 @@
 
 -- Add the override
 GSRCHUD:IncludeFile("util/override.lua");
+GSRCHUD:IncludeFile("util/deathcam_override.lua");
 
 if CLIENT then
   -- Paramteres
@@ -97,7 +98,8 @@ if CLIENT then
     @return {boolean} isEnabled
   ]]
   function GSRCHUD:IsDeathScreenEnabled()
-    return self.DeathScreen:GetInt() > 0;
+    local hasOverride, isOverriden = GSRCHUD:IsDeathScreenOverriden();
+    return (hasOverride and isOverriden) or (not hasOverride and self.DeathScreen:GetInt() > 0);
   end
 
 

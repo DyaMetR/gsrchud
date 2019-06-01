@@ -99,18 +99,22 @@ if CLIENT then
     @param {string} sprite
     @param {number} alpha
     @param {boolean} crit
-    @param {number} scissor
+    @param {number} vertical scissor
+    @param {Color|nil} colour
+    @param {boolean|nil} should offset be limited
+    @param {boolean|nil} should highlight be a sprite overlap
+    @param {number|nil} horizontal scissor
     @void
   ]]
-  function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap)
+  function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap, hScissor)
     overlap = overlap or false;
     if (overlap) then
-      self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset);
+      self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset, hScissor);
       if (alpha > self:GetBaseAlpha()) then
-        self:RenderSprite(x, y, sprite, scale, alpha - self:GetBaseAlpha(), crit, scissor, color, limitOffset);
+        self:RenderSprite(x, y, sprite, scale, alpha - self:GetBaseAlpha(), crit, scissor, color, limitOffset, hScissor);
       end
     else
-      self:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset);
+      self:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor);
     end
   end
 
@@ -121,15 +125,19 @@ if CLIENT then
     @param {string} sprite
     @param {number} alpha
     @param {boolean} crit
-    @param {number} scissor
+    @param {number} vertical scissor
+    @param {Color|nil} colour
+    @param {boolean|nil} should offset be limited
+    @param {number|nil} horizontal scissor
     @void
   ]]
-  function GSRCHUD:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset)
+  function GSRCHUD:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor)
     if self:GetSprite(sprite) == nil then return end; -- No valid sprite? Don't draw it!
     scale = scale or 1;
     alpha = alpha or 145;
     crit = crit or false;
     scissor = scissor or 1;
+    hScissor = hScissor or 1;
 
     if (limitOffset == nil) then
       limitOffset = true;
@@ -161,6 +169,7 @@ if CLIENT then
     local w, h = self:GetSpriteDimensions(sprite); -- Sprite dimensions
 
     local hCut = math.Round(h * scissor); -- How much is it cut (if it is), function for armor and stuff
+    local wCut = math.Round(w * hScissor); -- Horizontal cut
 
     local offset = (yOffset * scale);
 
@@ -177,7 +186,7 @@ if CLIENT then
 
     surface.SetTexture(material); -- Set the texture
     surface.SetDrawColor(color); -- Set the colour
-    surface.DrawTexturedRectUV(x + xOffset, y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(w * scale), math.Round(hCut * scale), u/fW, (v + (h - hCut))/fH, (u+w)/fW, (v+h)/fH); -- Draw the sprite
+    surface.DrawTexturedRectUV(x + xOffset, y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(wCut * scale), math.Round(hCut * scale), u/fW, (v + (h - hCut))/fH, (u+wCut)/fW, (v+h)/fH); -- Draw the sprite
   end
 
 end
