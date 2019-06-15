@@ -25,7 +25,7 @@ if CLIENT then
     -- HEALTH
     local w, h = GSRCHUD:GetSpriteDimensions("cross");
     local wOffset, hOffset = GSRCHUD:GetSpriteMargins("cross");
-    GSRCHUD:DrawNumber(x + (50 + w + wOffset) * scale, y, "health", math.Clamp(hp, 0, hp), scale, crit, nil, hpColor);
+    GSRCHUD:DrawNumber(x + (50 + w + wOffset) * scale, y, "health", math.max(hp, 0), scale, crit, nil, hpColor);
     GSRCHUD:DrawSprite(x, y, "cross", scale, GSRCHUD:GetNumberAlpha("health"), crit, nil, hpColor, nil, true);
     GSRCHUD:DrawSprite(x + (92 + wOffset) * scale, y, "separator", scale, GSRCHUD:GetNumberAlpha("health"), nil, nil, sepColor, nil, true);
 

@@ -216,6 +216,8 @@ if CLIENT then
 
     -- Credits
     panel:AddControl( "Label",  { Text = ""});
+    panel:AddControl( "Label",  { Text = "Version " .. GSRCHUD.Version});
+    panel:AddControl( "Label",  { Text = ""});
   	panel:AddControl( "Label",  { Text = "Credits"});
     panel:AddControl( "Label",  { Text = "Main script: DyaMetR"});
     panel:AddControl( "Label",  { Text = "Sprite-sheets: The respective game developers"});
@@ -226,5 +228,5 @@ if CLIENT then
   local function menuCreation()
   	spawnmenu.AddToolMenuOption( "Options", "DyaMetR", "GSRCHUD", "GoldSrc HUD", "", "", menuComposition );
   end
-  hook.Add( "PopulateToolMenu", "gunmanmenu", menuCreation );
+  hook.Add( "PopulateToolMenu", "gsrchud_menu", menuCreation );
 end
