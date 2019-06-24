@@ -104,17 +104,18 @@ if CLIENT then
     @param {boolean|nil} should offset be limited
     @param {boolean|nil} should highlight be a sprite overlap
     @param {number|nil} horizontal scissor
+    @param {boolean|nil} is horizontal scissor inverted
     @void
   ]]
-  function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap, hScissor)
+  function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap, hScissor, invHScis)
     overlap = overlap or false;
     if (overlap) then
-      self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset, hScissor);
+      self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset, hScissor, invHScis);
       if (alpha > self:GetBaseAlpha()) then
-        self:RenderSprite(x, y, sprite, scale, alpha - self:GetBaseAlpha(), crit, scissor, color, limitOffset, hScissor);
+        self:RenderSprite(x, y, sprite, scale, alpha - self:GetBaseAlpha(), crit, scissor, color, limitOffset, hScissor, invHScis);
       end
     else
-      self:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor);
+      self:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor, invHScis);
     end
   end
 
@@ -129,9 +130,10 @@ if CLIENT then
     @param {Color|nil} colour
     @param {boolean|nil} should offset be limited
     @param {number|nil} horizontal scissor
+    @param {boolean|nil} is horizontal scissor inverted
     @void
   ]]
-  function GSRCHUD:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor)
+  function GSRCHUD:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor, invHScis)
     if self:GetSprite(sprite) == nil then return end; -- No valid sprite? Don't draw it!
     scale = scale or 1;
     alpha = alpha or 145;
@@ -186,7 +188,12 @@ if CLIENT then
 
     surface.SetTexture(material); -- Set the texture
     surface.SetDrawColor(color); -- Set the colour
-    surface.DrawTexturedRectUV(x + xOffset, y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(wCut * scale), math.Round(hCut * scale), u/fW, (v + (h - hCut))/fH, (u+wCut)/fW, (v+h)/fH); -- Draw the sprite
+
+    if (invHScis) then
+      surface.DrawTexturedRectUV(x + xOffset + math.Round((w - wCut) * scale), y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(wCut * scale), math.Round(hCut * scale), (u + (w - wCut))/fW, (v + (h - hCut))/fH, (u + w)/fW, (v+h)/fH); -- Draw the sprite
+    else
+      surface.DrawTexturedRectUV(x + xOffset, y + (h - hCut) * scale + offset - h * (scale - 1), math.Round(wCut * scale), math.Round(hCut * scale), u/fW, (v + (h - hCut))/fH, (u+wCut)/fW, (v+h)/fH); -- Draw the sprite
+    end
   end
 
 end
