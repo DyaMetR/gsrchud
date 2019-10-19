@@ -26,7 +26,8 @@ if CLIENT then
     WeaponHighlightAlpha = 280,
     EnableColouring = 0,
     DefaultColor = 255,
-    DeathScreen = 1
+    DeathScreen = 1,
+    QuickInfo = 1
   };
 
   -- ConVars
@@ -41,6 +42,7 @@ if CLIENT then
   GSRCHUD.DirDamageSeparation = CreateClientConVar("gsrchud_dmg_separation", GSRCHUD.DefaultConfig.DirDamageSeparation);
   GSRCHUD.SkipEmptyWeapons = CreateClientConVar("gsrchud_skip_empty_weapons", GSRCHUD.DefaultConfig.SkipEmptyWeapons);
   GSRCHUD.DeathScreen = CreateClientConVar("gsrchud_death_screen_enabled", GSRCHUD.DefaultConfig.DeathScreen);
+  GSRCHUD.QuickInfo = CreateClientConVar("gsrchud_quickinfo", GSRCHUD.DefaultConfig.QuickInfo);
 
   GSRCHUD.Theme = CreateClientConVar("gsrchud_theme", GSRCHUD.DefaultConfig.DefaultTheme);
 
@@ -99,7 +101,7 @@ if CLIENT then
   ]]
   function GSRCHUD:IsDeathScreenEnabled()
     local hasOverride, isOverriden = GSRCHUD:IsDeathScreenOverriden();
-    return (hasOverride and isOverriden) or (not hasOverride and self.DeathScreen:GetInt() > 0);
+    return (hasOverride and isOverriden) or self.DeathScreen:GetInt() > 0;
   end
 
 
@@ -291,6 +293,14 @@ if CLIENT then
     return Color(self.SelectorColorR:GetInt(), self.SelectorColorG:GetInt(), self.SelectorColorB:GetInt());
   end
 
+  --[[
+    Returns whether the default quick info should be hid
+    @return {boolean} is hidden
+  ]]
+  function GSRCHUD:HideQuickInfo()
+    return self.QuickInfo:GetInt() > 0;
+  end
+
   -- Convar resetting commands
   concommand.Add("gsrchud_reset_alpha", function()
     RunConsoleCommand("gsrchud_alpha_base", GSRCHUD.DefaultConfig.BaseAlpha);
@@ -302,6 +312,7 @@ if CLIENT then
   concommand.Add("gsrchud_reset_util", function()
     RunConsoleCommand("gsrchud_skip_empty_weapons", GSRCHUD.DefaultConfig.SkipEmptyWeapons);
     RunConsoleCommand("gsrchud_dmg_separation", GSRCHUD.DefaultConfig.DirDamageSeparation);
+    RunConsoleCommand("gsrchud_quickinfo", GSRCHUD.DefaultConfig.QuickInfo);
   end);
 
   concommand.Add("gsrchud_reset_composition", function()
@@ -332,6 +343,7 @@ if CLIENT then
     hide["CHudSecondaryAmmo"] = GSRCHUD:IsAmmoEnabled();
     hide["CHudPoisonDamageIndicator"] = GSRCHUD:IsHazardEnabled();
     hide["CHudHistoryResource"] = GSRCHUD:IsPickupEnabled();
+    hide["CHUDQuickInfo"] = GSRCHUD:HideQuickInfo();
   	if ( hide[ name ] and GSRCHUD:IsEnabled()) then return false end;
   end )
 

@@ -12,6 +12,12 @@ if CLIENT then
   		}
   	);
 
+    panel:AddControl( "CheckBox", {
+  		Label = "Hide default quick info",
+  		Command = "gsrchud_quickinfo",
+  		}
+  	);
+
     -- Style
     panel:AddControl( "Label" , { Text = ""} );
     panel:AddControl( "Label" , { Text = "Style"} );

@@ -10,7 +10,8 @@ if CLIENT then
     local scale = GSRCHUD:GetHUDScale();
     local x, y = 10, ScrH() - 40;
     local hp = localPlayer:Health();
-    local ap = localPlayer:Armor();
+    local ap = 0;
+    if (localPlayer:IsPlayer()) then ap = localPlayer:Armor(); end
     local crit = (hp <= 25);
 
     local hpColor = nil;

@@ -15,8 +15,9 @@ if CLIENT then
     local primary = weapon:GetPrimaryAmmoType();
     local secondary = weapon:GetSecondaryAmmoType();
     local clip = weapon:Clip1();
-    local reserve = localPlayer:GetAmmoCount(primary);
-    local alt = localPlayer:GetAmmoCount(secondary);
+    local reserve = 0;
+    local alt = 0;
+    if (localPlayer:IsPlayer()) then reserve = localPlayer:GetAmmoCount(primary); alt = localPlayer:GetAmmoCount(secondary); end
 
     local clipColor = nil;
     local ammoColor = nil;
