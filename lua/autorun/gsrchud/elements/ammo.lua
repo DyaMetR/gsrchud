@@ -8,7 +8,7 @@ if CLIENT then
     if (not GSRCHUD:IsAmmoEnabled()) then return true end;
 
     local localPlayer = GSRCHUD:GetLocalPlayer();
-    if not IsValid(localPlayer:GetActiveWeapon()) or (localPlayer:GetActiveWeapon():GetPrimaryAmmoType() <= -1 and localPlayer:GetActiveWeapon():GetSecondaryAmmoType() <= -1) then return; end
+    if not localPlayer.GetActiveWeapon == nil or not IsValid(localPlayer:GetActiveWeapon()) or (localPlayer:GetActiveWeapon():GetPrimaryAmmoType() <= -1 and localPlayer:GetActiveWeapon():GetSecondaryAmmoType() <= -1) then return; end
     local scale = GSRCHUD:GetHUDScale();
     local x, y = ScrW() - 10, ScrH() - 40;
     local weapon = localPlayer:GetActiveWeapon();
