@@ -142,6 +142,12 @@ if CLIENT then
   		}
   	);
 
+    panel:AddControl( "CheckBox", {
+  		Label = "Auxiliary power enabled",
+  		Command = "gsrchud_auxpow_enabled",
+  		}
+  	);
+
     panel:AddControl("Button", {
   		Label = "Reset composition",
   		Command = "gsrchud_reset_composition"

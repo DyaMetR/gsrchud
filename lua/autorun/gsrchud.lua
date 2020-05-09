@@ -1,15 +1,15 @@
 --[[------------
    GoldSrc Era
  Heads Up Display
-  Version 1.11.5
-   23/11/2019
+  Version 1.12.0
+   08/05/2020
 
 By DyaMetR
 ]]--------------
 
 -- Main framework table
 GSRCHUD = {};
-GSRCHUD.Version = "1.11.4";
+GSRCHUD.Version = "1.12.0";
 
 --[[
   METHODS

@@ -82,7 +82,11 @@ if CLIENT then
     end
 
     for k, hazard in pairs(hazards) do
-      GSRCHUD:DrawSprite(x, y - h * k, GSRCHUD:GetHazard(hazard), scale, blink * 255, nil, nil, color);
+      if GSRCHUD:HasHazardCustomSprite(hazard) then
+        GSRCHUD:DrawCustomSprite(GSRCHUD:GetHazard(hazard), x, y - h * k, scale, blink * 255, nil, nil, color);
+      else
+        GSRCHUD:DrawSprite(x, y - h * k, GSRCHUD:GetHazard(hazard), scale, blink * 255, nil, nil, color);
+      end
     end
     Animation();
   end

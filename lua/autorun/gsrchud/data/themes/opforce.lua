@@ -31,9 +31,9 @@ if CLIENT then
     ["suit_empty"] = {x = 40, y = 24, w = 39, h = 39, file = file},
     ["suit_full"] = {x = 0, y = 24, w = 40, h = 39, file = file},
 
-    ["flash_full"] = {x = 160, y = 24, w = 32, h = 32, file = file},
-    ["flash_empty"] = {x = 112, y = 24, w = 32, h = 32, file = file},
-    ["flash_beam"] = {x = 144, y = 24, w = 16, h = 32, file = file},
+    ["flash_full"] = {x = 158, y = 24, w = 33, h = 32, file = file},
+    ["flash_empty"] = {x = 112, y = 24, w = 33, h = 32, file = file},
+    ["flash_beam"] = {x = 145, y = 24, w = 15, h = 32, file = file},
 
     ["bucket1"] = {x = 168, y = 72, w = 20, h = 20, file = file},
     ["bucket2"] = {x = 188, y = 72, w = 20, h = 20, file = file},
@@ -58,7 +58,7 @@ if CLIENT then
     ["dmg_bio"] = {x = 128, y = 0, w = 64, h = 64, file = file_hazard},
     ["dmg_poison"] = {x = 128, y = 0, w = 64, h = 64, file = file_hazard},
     ["dmg_chem"] = {x = 0, y = 0, w = 64, h = 64, file = file_hazard},
-    ["dmg_cold"] = {x = 64, y = 128, w = 64, h = 64, file = file_hazard},
+    ["dmg_cold"] = {x = 64, y = 64, w = 64, h = 64, file = file_hazard},
     ["dmg_drown"] = {x = 64, y = 0, w = 64, h = 64, file = file_hazard},
     ["dmg_heat"] = {x = 128, y = 64, w = 64, h = 64, file = file_hazard},
     ["dmg_gas"] = {x = 0, y = 64, w = 64, h = 64, file = file_hazard},

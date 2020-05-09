@@ -72,7 +72,7 @@ if CLIENT then
     ["dmg_poison"] = {x = 128, y = 0, w = 64, h = 64, file = file_hazard},
     ["dmg_chem"] = {x = 0, y = 0, w = 64, h = 64, file = file_hazard},
     ["dmg_cold"] = {x = 64, y = 128, w = 64, h = 64, file = file_hazard},
-    ["dmg_drown"] = {x = 64, y = 0, w = 64, h = 64, file = file_hazard},
+    ["dmg_drown"] = {x = 64, y = 64, w = 64, h = 64, file = file_hazard},
     ["dmg_heat"] = {x = 128, y = 64, w = 64, h = 64, file = file_hazard},
     ["dmg_gas"] = {x = 0, y = 64, w = 64, h = 64, file = file_hazard},
     ["dmg_rad"] = {x = 192, y = 64, w = 64, h = 64, file = file_hazard},

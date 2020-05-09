@@ -27,7 +27,8 @@ if CLIENT then
     EnableColouring = 0,
     DefaultColor = 255,
     DeathScreen = 1,
-    QuickInfo = 1
+    QuickInfo = 1,
+    AuxPower = 1
   };
 
   -- ConVars
@@ -43,6 +44,7 @@ if CLIENT then
   GSRCHUD.SkipEmptyWeapons = CreateClientConVar("gsrchud_skip_empty_weapons", GSRCHUD.DefaultConfig.SkipEmptyWeapons);
   GSRCHUD.DeathScreen = CreateClientConVar("gsrchud_death_screen_enabled", GSRCHUD.DefaultConfig.DeathScreen);
   GSRCHUD.QuickInfo = CreateClientConVar("gsrchud_quickinfo", GSRCHUD.DefaultConfig.QuickInfo);
+  GSRCHUD.AuxPower = CreateClientConVar("gsrchud_auxpow_enabled", GSRCHUD.DefaultConfig.AuxPower);
 
   GSRCHUD.Theme = CreateClientConVar("gsrchud_theme", GSRCHUD.DefaultConfig.DefaultTheme);
 
@@ -151,6 +153,14 @@ if CLIENT then
   ]]
   function GSRCHUD:IsHazardEnabled()
     return self.HazardEnabled:GetInt() > 0;
+  end
+
+  --[[
+    Returns whether the auxiliary power indicator is enabled
+    @return {boolean} isEnabled
+  ]]
+  function GSRCHUD:IsAuxPowerEnabled()
+    return self.AuxPower:GetInt() > 0;
   end
 
   --[[
@@ -322,6 +332,7 @@ if CLIENT then
     RunConsoleCommand("gsrchud_health_enabled", GSRCHUD.DefaultConfig.HealthEnabled);
     RunConsoleCommand("gsrchud_ammo_enabled", GSRCHUD.DefaultConfig.AmmoEnabled);
     RunConsoleCommand("gsrchud_damage_enabled", GSRCHUD.DefaultConfig.DamageEnabled);
+    RunConsoleCommand("gsrchud_auxpow_enabled", GSRCHUD.DefaultConfig.AuxPower);
   end);
 
   -- Hide default HUD
@@ -332,7 +343,8 @@ if CLIENT then
     CHudAmmo = true,
     CHudSecondaryAmmo = true,
     CHudPoisonDamageIndicator = true,
-    CHudHistoryResource = true
+    CHudHistoryResource = true,
+    CHudSuitPower = true
   }
 
   hook.Add( "HUDShouldDraw", "gsrchud_hide_default_hud", function( name )
@@ -343,7 +355,8 @@ if CLIENT then
     hide["CHudSecondaryAmmo"] = GSRCHUD:IsAmmoEnabled();
     hide["CHudPoisonDamageIndicator"] = GSRCHUD:IsHazardEnabled();
     hide["CHudHistoryResource"] = GSRCHUD:IsPickupEnabled();
-    hide["CHUDQuickInfo"] = GSRCHUD:HideQuickInfo();
+    hide["CHudQuickInfo"] = GSRCHUD:HideQuickInfo();
+    hide["CHudSuitPower"] = GSRCHUD:IsAuxPowerEnabled();
   	if ( hide[ name ] and GSRCHUD:IsEnabled()) then return false end;
   end )
 
@@ -369,6 +382,7 @@ GSRCHUD:IncludeFile("elements/hazards.lua");
 GSRCHUD:IncludeFile("elements/pickup.lua");
 GSRCHUD:IncludeFile("elements/damage.lua");
 GSRCHUD:IncludeFile("elements/death.lua");
+GSRCHUD:IncludeFile("elements/auxpow.lua");
 
 -- Load data
 GSRCHUD:IncludeFile("data/sprites.lua");
