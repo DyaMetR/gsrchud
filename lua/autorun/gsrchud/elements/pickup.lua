@@ -110,6 +110,12 @@ if CLIENT then
     return ((ScrH() - YOFFSET * scale)/sH) - 2;
   end
 
+  --[[
+    Adds an icon to the given category
+    @param {string} category
+    @param {string} item name
+    @param {number} only applied to ammunition; ammunition amount picked up
+  ]]
   local function AddPickupHistory(category, itemName, amount)
     amount = amount or 0;
     table.insert(history, {count = count, category = category, itemName = itemName, amount = amount, alpha = 1, time = CurTime() + TIME});
@@ -118,6 +124,14 @@ if CLIENT then
     else
       count = count + 1;
     end
+  end
+
+  --[[
+    Plays the weapon pickup sound
+    @void
+  ]]
+  function GSRCHUD:PlayPickupSound()
+    surface.PlaySound(PICKUP_SOUND);
   end
 
   --[[
@@ -134,7 +148,7 @@ if CLIENT then
   ]]
   local function AddWeaponIcon(weapon)
     AddPickupHistory(WEAPON, weapon);
-    surface.PlaySound(PICKUP_SOUND);
+    GSRCHUD:PlayPickupSound();
   end
 
   --[[
