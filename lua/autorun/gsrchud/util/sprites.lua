@@ -4,6 +4,8 @@
 
 if CLIENT then
 
+  local DEFAULT_ALPHA = 145
+
   -- Methods
   --[[
     Returns the sprite data
@@ -108,6 +110,7 @@ if CLIENT then
     @void
   ]]
   function GSRCHUD:DrawSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, overlap, hScissor, invHScis)
+    alpha = alpha or DEFAULT_ALPHA;
     overlap = overlap or false;
     if (overlap) then
       self:RenderSprite(x, y, sprite, scale, math.Clamp(alpha, 0, self:GetBaseAlpha()), crit, scissor, color, limitOffset, hScissor, invHScis);
@@ -136,7 +139,7 @@ if CLIENT then
   function GSRCHUD:RenderSprite(x, y, sprite, scale, alpha, crit, scissor, color, limitOffset, hScissor, invHScis)
     if self:GetSprite(sprite) == nil then return end; -- No valid sprite? Don't draw it!
     scale = scale or 1;
-    alpha = alpha or 145;
+    alpha = alpha or DEFAULT_ALPHA;
     crit = crit or false;
     scissor = scissor or 1;
     hScissor = hScissor or 1;
