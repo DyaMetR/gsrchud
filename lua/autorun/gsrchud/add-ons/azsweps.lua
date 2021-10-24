@@ -3,7 +3,8 @@
   https://steamcommunity.com/sharedfiles/filedetails/?id=2622152364
 ]]--------------------------------------------------------------------
 
-local HUD2, HUD5, HUD10, HLWE = '640hlaz2', '640hlaz5', '640hlaz10', '640hlwe'
+local HUD2, HUD5, HUD10, HUD11 = '640hlaz2', '640hlaz5', '640hlaz10', '640hlaz11'
+local HLWE, WEAPONS6 = '640hlaz', 'hud_weapons6'
 local GLOCK, SILENCED, SELECTED = 'weapon_glock_hl1', 'weapon_hlaz_glock_silenced', '_s'
 
 --[[ Default theme ]]--
@@ -12,6 +13,7 @@ local GLOCK, SILENCED, SELECTED = 'weapon_glock_hl1', 'weapon_hlaz_glock_silence
 GSRCHUD.sprite.addTexture(HUD2, surface.GetTextureID('gsrchud/_hlaz/640hud2'), 256, 256)
 GSRCHUD.sprite.addTexture(HUD5, surface.GetTextureID('gsrchud/_hlaz/640hud5'), 256, 256)
 GSRCHUD.sprite.addTexture(HUD10, surface.GetTextureID('gsrchud/_hlaz/640hud10'), 256, 256)
+GSRCHUD.sprite.addTexture(HUD11, surface.GetTextureID('gsrchud/_hlaz/640hud11'), 256, 128)
 
 -- inherit
 GSRCHUD.weapon.inheritSprite('weapon_hlaz_crowbar', 'weapon_crowbar_hl1')
@@ -46,12 +48,18 @@ GSRCHUD.weapon.addSprite('weapon_hlaz_chumtoad', {
   weapon_s = {HUD10, 0, 135, 170, 45}
 })
 
+GSRCHUD.weapon.addSprite('weapon_hlaz_minigun', {
+  weapon = {HUD11, 0, 0, 170, 45},
+  weapon_s = {HUD11, 0, 45, 170, 45}
+})
+
 --[[ Half-Life: Opposing Force theme ]]--
 
 -- textures
 GSRCHUD.sprite.addTexture(HUD2, surface.GetTextureID('gsrchud/_hlaz/640hudof2'), 256, 256, GSRCHUD.THEME_OPPOSINGFORCE)
 GSRCHUD.sprite.addTexture(HUD5, surface.GetTextureID('gsrchud/_hlaz/640hudof5'), 256, 256, GSRCHUD.THEME_OPPOSINGFORCE)
 GSRCHUD.sprite.addTexture(HUD10, surface.GetTextureID('gsrchud/_hlaz/640hudof10'), 256, 256, GSRCHUD.THEME_OPPOSINGFORCE)
+GSRCHUD.sprite.addTexture(HUD11, surface.GetTextureID('gsrchud/_hlaz/640hudof11'), 256, 128, GSRCHUD.THEME_OPPOSINGFORCE)
 
 --[[ Half-Life: Weapon Edition theme ]]--
 
@@ -66,3 +74,4 @@ GSRCHUD.sprite.add('weapon_hlaz_glock_silenced', HLWE, 0, 0, 170, 52, GSRCHUD.TH
 
 -- new weapon icons
 GSRCHUD.weapon.addSprite('weapon_hlaz_chumtoad', { weapon = {HLWE, 0, 51, 170, 52} }, false, GSRCHUD.THEME_HLWE)
+GSRCHUD.weapon.addSprite('weapon_hlaz_minigun', { weapon = {WEAPONS6, 0, 102, 170, 52} }, false, GSRCHUD.THEME_HLWE)

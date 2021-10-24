@@ -9,13 +9,14 @@ local HOOK = 'ttt'
 -- colours for each role
 local COLOURS = {
   Color(66, 255, 50),
-  Color(255, 99, 33),
+  Color(255, 88, 66),
   Color(100, 180, 255)
 }
 
 --[[ Hide TTT HUD ]]--
 local hide = { ['TTTInfoPanel'] = true, ['TTTPickupHistory'] = true }
 hook.Add('HUDShouldDraw', GSRCHUD.hookname .. HOOK, function(element)
+  if not GSRCHUD.isEnabled() then return end
   if hide[element] then return false end
 end)
 

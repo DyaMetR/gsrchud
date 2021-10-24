@@ -90,6 +90,16 @@ function PANEL:OnSizeChanged(w, h)
 end
 
 --[[------------------------------------------------------------------
+  Changes visibility of all children.
+  @param {boolean} visible
+]]--------------------------------------------------------------------
+function PANEL:SetVisible(visible)
+  self.frame:SetVisible(visible)
+  self.mdl:SetVisible(visible)
+  self.label:SetVisible(visible)
+end
+
+--[[------------------------------------------------------------------
   Sets a new offset, resizing all components.
   @param {number} offset scale (0-1)
 ]]--------------------------------------------------------------------
