@@ -1,7 +1,0 @@
-"UnlitGeneric"
-{
-   "$basetexture" "gsrchud/common/default_weapons/smg1"
-   "$additive" "1"
-   "$vertexalpha" "1"
-   "$vertexcolor" "1"
-}

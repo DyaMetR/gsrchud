@@ -1,7 +1,0 @@
-"UnlitGeneric"
-{
-   "$basetexture" "gsrchud/common/hl1_weapons_upset/640hud2"
-   "$additive" "1"
-   "$vertexalpha" "1"
-   "$vertexcolor" "1"
-}

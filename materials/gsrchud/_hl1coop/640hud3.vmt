@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"gsrchud/_hl1coop/640hud3"
+	"$vertexalpha"	"1"
+	"$vertexcolor"	"1"
+	"$additive"	"1"
+}

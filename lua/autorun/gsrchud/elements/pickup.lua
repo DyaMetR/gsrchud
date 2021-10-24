@@ -1,187 +1,206 @@
---[[
-  PICKUP HISTORY
-]]
+--[[------------------------------------------------------------------
+  Pickup history
+]]--------------------------------------------------------------------
 
-if CLIENT then
+local PICKUP_AMMO, PICKUP_WEAPON, PICKUP_ITEM = 0, 1, 2
+local FREQ, TIME = .03, 3
+local WEAPON_PICKUP_SOUND = 'gsrchud/default/gunpickup2.wav'
+local BUCKET = 'bucket'
+local FONT = 'gsrchud_ammopickup'
+local DEFAULT_ALPHA = 255
 
-  -- Parameters
-  local AMMO = "ammo";
-  local WEAPON = "weapon";
-  local ITEM = "item";
-  local FREQ = 0.02; -- How fast does the icons fade out
-  local TIME = 3; -- How much time it takes for the icons to start fading out
-  local XOFFSET = 10; -- How far is the HUD element from the screen X axis
-  local YOFFSET = 130; -- How far is the HUD element from the screen Y axis
-  local SEPARATION = 5; -- How separated are each icon
-  local PICKUP_SOUND = "gsrchud/gunpickup2.wav"; -- The weapon pickup sound
+local SOUND_HOOK = 'PickupSound'
 
-  -- Variables
-  local count = 0;
-  local history = {};
-  local think = 0;
+local height = 0 -- relative position to origin where the next icon will appear
+local _next = 1 -- next position in tray
+local count = 0 -- optimize table counting
+local history = {} -- current pickups being displayed
 
-  -- Methods
-  --[[
-    Draws a history entry
-    @param {table} entry
-    @void
-  ]]
-  local function DrawItem(entry)
-    local sW, sH = GSRCHUD:GetSpriteDimensions("weapon_slot");
-    local scale = GSRCHUD:GetHUDScale();
-    local x, y = 0, ScrH() - (YOFFSET * scale) - ((sH + SEPARATION) * scale * entry.count);
-    local t = entry.category; -- The item category
-    local a = GSRCHUD:GetWeaponHighlightAlpha(); -- Alpha channel
+local _scale = 1
+local tick = 0
+local colour = Color(0, 0, 0) -- optimize font colour usage
 
-    local color = nil;
-    if (GSRCHUD:IsCustomColouringEnabled()) then
-      color = GSRCHUD:GetCustomSelectorColor();
-    end
+--[[ Create ammunition pickup font ]]--
+--[[------------------------------------------------------------------
+  Generates the ammunition pickup font.
+]]--------------------------------------------------------------------
+local function generate()
+  _scale = GSRCHUD.sprite.scale()
+  surface.CreateFont(FONT, {
+    font = 'Trebuchet MS',
+    size = 20 * _scale,
+    weight = 1000,
+    additive = true
+  })
+end
 
-    if (t == AMMO) then -- If the item picked up was ammunition
+-- generate first instance
+generate()
 
-      local w, h = GSRCHUD:GetSpriteDimensions(GSRCHUD:GetAmmoIcon(entry.itemName));
-      x = ScrW() - (w * scale);
-      GSRCHUD:DrawAmmoIcon(x, y, entry.itemName, entry.amount, scale, entry.alpha * a);
+--[[ Create element ]]--
+local ELEMENT = GSRCHUD.element.create()
 
-    elseif (t == WEAPON) then -- If the item picked up was a weapon
+--[[------------------------------------------------------------------
+  Draws a weapon pickup.
+  @param {number} x
+  @param {number} y
+  @param {table} pickup data
+]]--------------------------------------------------------------------
+local function drawWeaponPickup(x, y, pickup)
+  if not IsValid(pickup.weapon) then return end
+  local alpha = DEFAULT_ALPHA * math.min(GSRCHUD.sprite.alpha() / GSRCHUD.DEFAULT_ALPHA, 1)
 
-      if (entry.itemName.DrawWeaponInfoBox) then
-        entry.itemName.DrawWeaponInfoBox = false;
-      end
+  -- get bucket's size
+  local w, h = GSRCHUD.sprite.getSize(BUCKET)
 
-      x = ScrW() - (sW * scale) - XOFFSET;
-      GSRCHUD:DrawWeaponSlot(x, y, entry.itemName, scale, entry.alpha * a, false, not GSRCHUD:HasAmmoForWeapon(entry.itemName));
+  -- get colour
+  local _colour = GSRCHUD.sprite.userColour(GSRCHUD.config.getPickupColour(), not LocalPlayer():HasWeapon(pickup.weapon:GetClass()) or not pickup.weapon:HasAmmo())
 
-    elseif (t == ITEM) then -- If the item pickued up was an item
+  -- draw weapon icon
+  GSRCHUD.weapon.draw(x - w, y, pickup.weapon, nil, _colour, nil, alpha * pickup.alpha)
+end
 
-      local w, h = GSRCHUD:GetSpriteDimensions(entry.itemName);
-      x = ScrW() - (w * scale) - XOFFSET;
-      GSRCHUD:DrawSprite(x, y, GSRCHUD:GetItemSprite(entry.itemName), scale, entry.alpha * a, nil, nil, color);
+--[[------------------------------------------------------------------
+  Draws an ammunition pickup.
+  @param {number} x
+  @param {number} y
+  @param {table} pickup data
+]]--------------------------------------------------------------------
+local function drawAmmoPickup(x, y, pickup)
+  local scale = GSRCHUD.sprite.scale()
+  local alpha = DEFAULT_ALPHA * math.min(GSRCHUD.sprite.alpha() / GSRCHUD.DEFAULT_ALPHA, 1)
+  local _colour = GSRCHUD.sprite.userColour(GSRCHUD.config.getPickupColour())
+  local w, h = GSRCHUD.ammunition.draw(x, y, pickup.ammoType, nil, _colour, TEXT_ALIGN_RIGHT, nil, nil, alpha * pickup.alpha)
+  local _x, _y = 9 * scale, -2 * scale
 
+  -- set colour
+  colour.r = _colour.r
+  colour.g = _colour.g
+  colour.b = _colour.b
+  colour.a = alpha * pickup.alpha
+
+  -- draw
+  draw.SimpleText(pickup.amount, FONT, x - w - _x, y + (h * .5) + _y, colour, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+end
+
+--[[------------------------------------------------------------------
+  Draws an item pickup.
+  @param {number} x
+  @param {number} y
+  @param {table} pickup data
+]]--------------------------------------------------------------------
+local function drawItemPickup(x, y, pickup)
+  GSRCHUD.item.draw(x, y, pickup.item, GSRCHUD.sprite.userColour(GSRCHUD.config.getPickupColour()), TEXT_ALIGN_RIGHT, nil, nil, DEFAULT_ALPHA * math.min(GSRCHUD.sprite.alpha() / GSRCHUD.DEFAULT_ALPHA, 1) * pickup.alpha)
+end
+
+--[[------------------------------------------------------------------
+  Adds a pickup to the history to display.
+  @param {PICKUP_} type
+  @param {table} pickup information
+]]--------------------------------------------------------------------
+local function addPickup(_type, data)
+  local scale = GSRCHUD.sprite.scale()
+  local margin = (ELEMENT.parameters.margin or 5) * scale
+  local size = (ELEMENT.parameters.size or 45) * scale
+  local max = ELEMENT.parameters.max or math.floor((ScrH() / scale) / 90)
+
+  -- call hook
+  local _return = hook.Run('GSRCHUDPickup', _type, data)
+  if _return then return end
+
+  -- reserve pickup's height
+  height = height + size
+
+  -- complete pickup information
+  data.type = _type
+  data.y = height
+  data.alpha = 1
+  data.time = CurTime() + TIME
+
+  -- add element to tray
+  history[_next] = data
+  _next = _next + 1
+  count = count + 1
+
+  -- add margin
+  height = height + margin
+
+  -- if the maximum amount has been reached, reset
+  if _next > max then
+    height = 0
+    _next = 1
+  end
+end
+
+-- draw
+function ELEMENT:draw()
+  local scale = GSRCHUD.sprite.scale()
+
+  -- update font size
+  if _scale ~= scale then generate() end
+
+  -- sort parameters
+  local x = self.parameters.x or ScrW()
+  local y = self.parameters.y or (ScrH() - 72 * scale)
+
+  -- draw
+  for i, pickup in pairs(history) do
+    if pickup.type == PICKUP_WEAPON then
+      drawWeaponPickup(x, y - pickup.y, pickup)
+    elseif pickup.type == PICKUP_AMMO then
+      drawAmmoPickup(x, y - pickup.y, pickup)
+    elseif pickup.type == PICKUP_ITEM then
+      drawItemPickup(x, y - pickup.y, pickup)
     end
   end
 
-  --[[
-    Animates the item pickup history
-    @void
-  ]]
-  local function Animation()
-    if #history > 0 and think < CurTime() then
-      for k, entry in pairs(history) do
-        if (entry.time < CurTime()) then
-          if (entry.alpha - 0.01 > 0) then
-            entry.alpha = entry.alpha - 0.01;
-          else
-            entry.alpha = 0;
-            table.remove(history, k);
+  -- animate
+  if tick < CurTime() then
+    for i, pickup in pairs(history) do
+      if pickup.time < CurTime() then
+        if pickup.alpha > 0 then
+          pickup.alpha = math.max(pickup.alpha - FREQ, 0) -- fade out
+        else
+          -- remove itself from history
+          history[i] = nil
+          count = count - 1
+
+          -- reset height and count if no more are available
+          if count <= 0 then
+            _next = 1
+            height = 0
           end
         end
       end
-      think = CurTime() + FREQ;
-    else
-      if #history <= 0 and count > 0 then
-        count = 0;
-      end
     end
+    tick = CurTime() + .05
   end
-
-  --[[
-    Draws the entire pickup history
-    @void
-  ]]
-  local function PickupHistory()
-    if (not GSRCHUD:IsPickupEnabled()) then return true end;
-    Animation();
-    for _, item in pairs(history) do
-      DrawItem(item);
-    end
-  end
-  GSRCHUD:AddElement(PickupHistory);
-
-  --[[
-    Returns the maximum amount of items on display at once
-    @return {number} maxItems
-  ]]
-  local function GetMaxItems()
-    local sW, sH = GSRCHUD:GetSpriteDimensions("weapon_slot");
-    local scale = GSRCHUD:GetHUDScale();
-    sH = sH * scale;
-    return ((ScrH() - YOFFSET * scale)/sH) - 2;
-  end
-
-  --[[
-    Adds an icon to the given category
-    @param {string} category
-    @param {string} item name
-    @param {number} only applied to ammunition; ammunition amount picked up
-  ]]
-  local function AddPickupHistory(category, itemName, amount)
-    amount = amount or 0;
-    table.insert(history, {count = count, category = category, itemName = itemName, amount = amount, alpha = 1, time = CurTime() + TIME});
-    if (count > GetMaxItems()) then
-      count = 0;
-    else
-      count = count + 1;
-    end
-  end
-
-  --[[
-    Plays the weapon pickup sound
-    @void
-  ]]
-  function GSRCHUD:PlayPickupSound()
-    surface.PlaySound(PICKUP_SOUND);
-  end
-
-  --[[
-    Adds an ammo icon to the item pickup history
-    @void
-  ]]
-  local function AddAmmoIcon(itemName, amount)
-    AddPickupHistory(AMMO, itemName, amount);
-  end
-
-  --[[
-    Adds a weapon icon to the pickup history
-    @void
-  ]]
-  local function AddWeaponIcon(weapon)
-    AddPickupHistory(WEAPON, weapon);
-    GSRCHUD:PlayPickupSound();
-  end
-
-  --[[
-    Adds a item icon to the pickup history
-    @void
-  ]]
-  local function AddItemIcon(itemName)
-    AddPickupHistory(ITEM, itemName);
-  end
-
-  --[[
-    HOOKS
-  ]]
-  hook.Add("HUDAmmoPickedUp", "gsrchud_ammo_pickup", function(itemName, amount)
-    if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
-      AddAmmoIcon(itemName, amount);
-      return true;
-    end
-  end);
-
-  hook.Add("HUDWeaponPickedUp", "gsrchud_weapon_pickup", function(weapon)
-    if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
-      AddWeaponIcon(weapon);
-      return true;
-    end
-  end);
-
-  hook.Add("HUDItemPickedUp", "gsrchud_item_pickup", function(itemName)
-    if (GSRCHUD:IsEnabled() and GSRCHUD:IsPickupEnabled()) then
-      AddItemIcon(itemName);
-      return true;
-    end
-  end);
-
-
 end
+
+-- register
+GSRCHUD.element.register('pickup', {}, ELEMENT)
+
+--[[ Hide default pickup history ]]--
+hook.Add('HUDDrawPickupHistory', GSRCHUD.hookname, function()
+  return GSRCHUD.isEnabled() and GSRCHUD.hasSuit() and GSRCHUD.config.getPickup() or nil
+end)
+
+--[[ Picked up ammunition ]]--
+hook.Add('HUDAmmoPickedUp', GSRCHUD.hookname, function(ammoType, amount)
+  if not GSRCHUD.isEnabled() or not GSRCHUD.hasSuit() or not GSRCHUD.config.getPickup() then return end
+  addPickup(PICKUP_AMMO, {ammoType = ammoType, amount = amount})
+end)
+
+--[[ Picked up weapon ]]--
+hook.Add('HUDWeaponPickedUp', GSRCHUD.hookname, function(weapon)
+  if not GSRCHUD.isEnabled() or not GSRCHUD.hasSuit() or not GSRCHUD.config.getPickup() then return end
+  addPickup(PICKUP_WEAPON, {weapon = weapon})
+  if GSRCHUD.hook.run(SOUND_HOOK) == false then return end
+  surface.PlaySound(WEAPON_PICKUP_SOUND)
+end)
+
+--[[ Picked up item ]]--
+hook.Add('HUDItemPickedUp', GSRCHUD.hookname, function(item)
+  if not GSRCHUD.isEnabled() or not GSRCHUD.hasSuit() or not GSRCHUD.config.getPickup() or not GSRCHUD.item.has(item) then return end
+  addPickup(PICKUP_ITEM, {item = item})
+end)

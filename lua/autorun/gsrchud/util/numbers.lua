@@ -1,180 +1,131 @@
---[[
-  NUMBERS
-]]
+--[[------------------------------------------------------------------
+  Display numbers with their highlighting.
+]]--------------------------------------------------------------------
 
-if CLIENT then
+GSRCHUD.number = {}
 
-  -- Number list
-  GSRCHUD.Numbers = {};
+local SPRITES = { -- number sprites
+  'number_0',
+  'number_1',
+  'number_2',
+  'number_3',
+  'number_4',
+  'number_5',
+  'number_6',
+  'number_7',
+  'number_8',
+  'number_9',
+}
 
-  -- Methods
-  --[[
-    Adds a number to the table
-    @param {string} id
-    @param {number} value
-    @void
-  ]]
-  function GSRCHUD:AddNumber(id, value)
-    self.Numbers[id] = {value = value, old = value, alpha = 0};
+local numbers = {}
+
+local NUMBER = { -- prototype
+  value = 0,
+  highlight = 0
+}
+
+--[[------------------------------------------------------------------
+  Sets the number's value, triggering the highlight if it changed from before.
+  @param {number} new value
+]]--------------------------------------------------------------------
+function NUMBER:set(value)
+  -- highlight if it was different
+  if value ~= self.value then
+    self.highlight = 1
   end
 
-  --[[
-    Returns the entire number list
-    @return GSRCHUD.Numbers
-  ]]
-  function GSRCHUD:GetNumbers()
-    return self.Numbers;
+  -- set new value
+  self.value = math.max(math.Round(value), 0)
+end
+
+--[[------------------------------------------------------------------
+  Returns whether the number should be highlighted.
+  @return {boolean} should highlight
+]]--------------------------------------------------------------------
+function NUMBER:isForced()
+  return false
+end
+
+--[[------------------------------------------------------------------
+  Draws the given number.
+  @param {number} x
+  @param {number} y
+  @param {TEXT_ALIGN_TOP|TEXT_ALIGN_CENTER|TEXT_ALIGN_BOTTOM} vertical alignment
+  @param {Color|boolean|nil} colour
+  @param {number|nil} scale
+  @param {number|nil} alpha
+  @param {THEME_|nil} theme
+  @return {number} width
+  @return {number} height
+]]--------------------------------------------------------------------
+function NUMBER:draw(x, y, align, colour, scale, alpha, theme)
+  local _alpha = self.highlight
+  if self:isForced() then _alpha = 1 end
+  return GSRCHUD.number.render(self.value, x, y, align, _alpha, colour, scale, alpha, theme)
+end
+
+--[[------------------------------------------------------------------
+  Creates and registers a highlightable number.
+  @param {number} default value
+  @return {table} number data
+  @return {number} position in table
+]]--------------------------------------------------------------------
+function GSRCHUD.number.create(default)
+  local number = table.Copy(NUMBER)
+  number.value = math.max(math.Round(default or 0), 0)
+  return number, table.insert(numbers, number)
+end
+
+--[[------------------------------------------------------------------
+  Returns a number's data
+  @param {NUMBER_} position in table
+  @return {table} number's data
+]]--------------------------------------------------------------------
+function GSRCHUD.number.get(number)
+  return numbers[number]
+end
+
+--[[------------------------------------------------------------------
+  Renders a number.
+  @param {number} value to display
+  @param {number} x
+  @param {number} y
+  @param {boolean} is aligned to the bottom
+  @param {number|nil} highlight amount
+  @param {Color|boolean|nil} colour
+  @param {number|nil} scale
+  @param {number|nil} alpha
+  @param {THEME_|nil} theme
+  @return {number} width
+  @return {number} height
+]]--------------------------------------------------------------------
+function GSRCHUD.number.render(value, x, y, align, highlight, colour, scale, alpha, theme)
+  local digits = math.floor(math.log10(value)) + 1
+  local w, h = 0, 0
+  for i=1, math.max(digits, 1) do
+    -- get digit to display
+    local digit = math.floor((value % math.pow(10, i)) / math.pow(10, i - 1))
+
+    -- draw digit
+    local sprite = SPRITES[digit + 1]
+    local _w, _h = GSRCHUD.sprite.drawTwin(sprite, x, y, highlight, colour, TEXT_ALIGN_RIGHT, align, scale, alpha, theme)
+
+    -- accumulate size
+    w = w + _w
+    if _h > h then h = _h end
+
+    -- apply offset
+    x = x - _w
   end
 
-  --[[
-    Returns a number based on the given id
-    @param {string} id
-    @return {table} number
-  ]]
-  function GSRCHUD:GetNumber(id)
-    return self:GetNumbers()[id];
+  return w, h
+end
+
+--[[------------------------------------------------------------------
+  Runs the logic behind the highlighting.
+]]--------------------------------------------------------------------
+function GSRCHUD.number.run()
+  for _, number in pairs(numbers) do
+    number.highlight = math.max(number.highlight - RealFrameTime() / 5, 0)
   end
-
-  --[[
-    Returns whether a number exists or not
-    @param {string} id
-    @return {boolean} exists
-  ]]
-  function GSRCHUD:NumberExists(id)
-    return self:GetNumber(id) ~= nil;
-  end
-
-  --[[
-    Sets a custom crit amount for a specific number
-    @param {string} id
-    @param {boolean} crit
-    @void
-  ]]
-  function GSRCHUD:SetCustomNumberCrit(id, crit)
-    if self:GetNumber(id) == nil then return false end;
-    self:GetNumber(id).crit = crit;
-  end
-
-  --[[
-    Clears all of the custom crit modifications
-    @void
-  ]]
-  function GSRCHUD:ClearCustomNumberCrit()
-    for _, number in pairs(self:GetNumbers()) do
-      if (number.crit ~= nil) then
-        number.crit = nil;
-      end
-    end
-  end
-
-  --[[
-    Returns the custom crit amount for the specific number (if there's any)
-    @param {string} id
-    @return {number} crit
-  ]]
-  function GSRCHUD:GetCustomNumberCrit(id)
-    if self:GetNumber(id) == nil then return false end;
-    return self:GetNumber(id).crit or false;
-  end
-
-  --[[
-    Updates a number value
-    @param {string} id
-    @param {number} value
-    @void
-  ]]
-  function GSRCHUD:UpdateNumber(id, value)
-    self:GetNumber(id).value = value;
-
-    if (self:GetNumber(id).old ~= value) then
-      self:GetNumber(id).alpha = 1;
-      self:GetNumber(id).old = value;
-    end
-  end
-
-  --[[
-    Renders the given number on the given position
-    @param {number} x
-    @param {number} y
-    @param {number} value
-    @param {int} alpha
-    @void
-  ]]
-  function GSRCHUD:RenderNumber(x, y, value, scale, crit, alpha, small, color)
-    small = small or false;
-    scale = scale or 1;
-    alpha = alpha or 0;
-    crit = crit or false;
-    local tab = string.Explode("", tostring(value));
-    local s = "";
-
-    if small then
-      s = "s";
-    end
-
-    local i = #tab;
-    while (i>0) do
-      local k = (#tab - i)+1;
-      local w, h = self:GetSpriteDimensions(s..tab[k]);
-      self:DrawSprite(x - ((w-1)*k) * scale, y, s..tab[i], scale, alpha, crit, nil, color, nil, true);
-      i = i - 1;
-    end
-  end
-
-  --[[
-    Adds the number and renders it
-    @param {number} x
-    @param {number} y
-    @param {string} id
-    @param {number} value
-    @void
-  ]]
-  function GSRCHUD:DrawNumber(x, y, id, value, scale, crit, alpha, color)
-    alpha = alpha or self:GetNumberAlpha(id);
-    crit = crit or self:GetCustomNumberCrit(id);
-
-    if not self:NumberExists(id) then
-      self:AddNumber(id, value);
-    else
-      self:UpdateNumber(id, value);
-    end
-    self:RenderNumber(x, y, self:GetNumber(id).value, scale, crit, alpha, nil, color);
-  end
-
-  --[[
-    Forces a custom number alpha
-    @param {string} id
-    @param {number} alpha
-    @void
-  ]]
-  function GSRCHUD:SetNumberAlpha(id, alpha)
-    if self:GetNumber(id) == nil then return nil end;
-    self:GetNumber(id).alpha = alpha;
-  end
-
-  --[[
-    Returns the alpha channel of a number
-    @param {string} id
-    @return {number} alpha
-  ]]
-  function GSRCHUD:GetNumberAlpha(id)
-    if self:GetNumber(id) == nil then return nil end;
-    return self:GetBaseAlpha() + (self:GetHighlightAlpha()*self:GetNumber(id).alpha);
-  end
-
-  -- Hooks
-  local think = 0;
-  hook.Add("Tick", "gsrchud_numanim", function()
-    if (table.Count(GSRCHUD:GetNumbers()) > 0) then
-      if think < CurTime() then
-        for k, num in pairs(GSRCHUD:GetNumbers()) do
-          if num.alpha > 0 then
-            num.alpha = math.Clamp(num.alpha - 0.01, 0, 1);
-          end
-        end
-        think = CurTime() + 0.1;
-      end
-    end
-  end);
-
 end

@@ -1,161 +1,112 @@
---[[
-  DAMAGE DIRECTIONAL INDICATORS
-]]
+--[[------------------------------------------------------------------
+  Displays where is the player being attacked from
+]]--------------------------------------------------------------------
 
 -- ENUMS
-local UP = 0;
-local DOWN = 1;
-local LEFT = 2;
-local RIGHT = 3;
+local UP = 1
+local DOWN = 2
+local LEFT = 3
+local RIGHT = 4
+
+-- NET
+local NET = 'gsrchud_damage'
 
 if CLIENT then
 
-  -- Parameters
-  local FREQ = 0.05;
-  local ALPHA = 255;
+  local ALPHA = 1 -- starting alpha
+  local DEFAULT_COLOUR = Color(255, 255, 255) -- default colour
+  local BASE_ALPHA = 255 -- base alpha value
+  local SPRITES = { 'pain0', 'pain2', 'pain1', 'pain3' }
 
-  -- Variables
-  local damage = {
-    [UP] = {alpha = 0, think = 0},
-    [DOWN] = {alpha = 0, think = 0},
-    [LEFT] = {alpha = 0, think = 0},
-    [RIGHT] = {alpha = 0, think = 0}
-  };
+  local damage = {} -- directional indicators
+  for i=1, 4 do -- initialize damage indicators
+    damage[i] = 0
+  end
 
-  -- Methods
-  --[[
-    Animates each damage indicator
-    @void
-  ]]
-  local function Animation()
-    for _, sprite in pairs(damage) do
-      if (sprite.alpha - FREQ > 0) then
-        if (sprite.think < CurTime()) then
-          sprite.alpha = sprite.alpha - FREQ;
-          sprite.think = CurTime() + 0.01;
-        end
-      else
-        if (sprite.alpha ~= 0) then
-          sprite.alpha = 0;
-        end
-      end
+  --[[ Create configuration ]]--
+  GSRCHUD.config.createConVar('damageOffset', 100, GSRCHUD.config.PARAM_NUMERIC)
+
+  --[[ Create element ]]--
+  local ELEMENT = GSRCHUD.element.create()
+
+  -- draw
+  function ELEMENT:draw()
+    local scale = GSRCHUD.sprite.scale()
+
+    -- sort parameters
+    local colour = self.parameters.colour or DEFAULT_COLOUR
+    local separation = self.parameters.separation or GSRCHUD.config.getDamageOffset() * scale
+
+    -- animate
+    for i, dmg in pairs(damage) do
+      damage[i] = math.max(dmg - RealFrameTime() / .275, 0)
     end
+
+    -- pain indicators
+    local x, y = ScrW() * .5, ScrH() * .5
+
+    -- draw indicators
+    GSRCHUD.sprite.draw(SPRITES[UP], x, y - separation, colour, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, nil, BASE_ALPHA * damage[UP])
+    GSRCHUD.sprite.draw(SPRITES[DOWN], x, y + separation, colour, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, nil, BASE_ALPHA * damage[DOWN])
+    GSRCHUD.sprite.draw(SPRITES[LEFT], x + separation, y, colour, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, nil, BASE_ALPHA * damage[LEFT])
+    GSRCHUD.sprite.draw(SPRITES[RIGHT], x - separation, y, colour, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, nil, BASE_ALPHA * damage[RIGHT])
   end
 
-  --[[
-    Returns the alpha amount of a damage indicator
-    @param {number} enum
-    @return {number} alpha
-  ]]
-  local function GetIndicatorAlpha(enum)
-    if (damage[enum] == nil) then return 0 end;
-    return damage[enum].alpha;
-  end
+  -- register
+  GSRCHUD.element.register('damage', {'CHudDamageIndicator'}, ELEMENT)
 
-  --[[
-    Draws the damage indicators
-    @void
-  ]]
-  local function Damage()
-    if (not GSRCHUD:IsDamageEnabled()) then return true end;
-    local scale = GSRCHUD:GetHUDScale();
-    local separation = GSRCHUD:GetDirDamageSeparation() * scale;
-
-    -- UP
-    local sprite = "pain_up";
-    local w, h = GSRCHUD:GetSpriteDimensions(sprite);
-    local xOffset, yOffset = GSRCHUD:GetSpriteOffsets(sprite);
-    w = w * scale;
-    GSRCHUD:DrawSprite((ScrW()/2) - (w/2), (ScrH()/2) - (h * scale) - separation + (h * (scale - 1)), sprite, scale, math.Clamp(ALPHA * GetIndicatorAlpha(UP), 0, 255), true, nil, nil, false);
-
-    -- DOWN
-    local sprite = "pain_down";
-    local w, h = GSRCHUD:GetSpriteDimensions(sprite);
-    w = w * scale;
-    GSRCHUD:DrawSprite((ScrW()/2) - (w/2), (ScrH()/2) + separation + (h * (scale - 1)), sprite, scale, math.Clamp(ALPHA * GetIndicatorAlpha(DOWN), 0, 255), true);
-
-    -- RIGHT
-    local sprite = "pain_right";
-    local w, h = GSRCHUD:GetSpriteDimensions(sprite);
-    w = w * scale;
-    h = h * scale - h * (scale - 1) * 2;
-    GSRCHUD:DrawSprite((ScrW()/2) + separation, (ScrH()/2) - (h/2), sprite, scale, math.Clamp(ALPHA * GetIndicatorAlpha(RIGHT), 0, 255), true);
-
-    -- LEFT
-    local sprite = "pain_left";
-    local w, h = GSRCHUD:GetSpriteDimensions(sprite);
-    w = w * scale;
-    h = h * scale - h * (scale - 1) * 2;
-    GSRCHUD:DrawSprite((ScrW()/2) - w - separation, (ScrH()/2) - (h/2), sprite, scale, math.Clamp(ALPHA * GetIndicatorAlpha(LEFT), 0, 255), true);
-
-    Animation();
-  end
-  GSRCHUD:AddElement(Damage);
-
-  --[[
-    Triggers a damage indicator
-    @param {number} enum
-    @void
-  ]]
-  local function IndicateDamage(enum)
-    if (damage[enum] == nil) then return false end;
-    damage[enum].alpha = 1;
-  end
-
-  net.Receive("gsrchud_damage", function(len)
-    local enums = net.ReadTable();
-    for _, enum in pairs(enums) do
-      IndicateDamage(enum);
-    end
-  end);
+  --[[ Receive damage taken ]]--
+  net.Receive(NET, function()
+    local up = net.ReadBool()
+    local down = net.ReadBool()
+    local left = net.ReadBool()
+    local right = net.ReadBool()
+    if up then damage[UP] = 1 end
+    if down then damage[DOWN] = 1 end
+    if left then damage[LEFT] = 1 end
+    if right then damage[RIGHT] = 1 end
+  end)
 
 end
 
 if SERVER then
 
-  util.AddNetworkString("gsrchud_damage");
+  util.AddNetworkString(NET)
 
-  local generic = {DMG_GENERIC, DMG_CRUSH, DMG_SONIC};
-  local override = {DMG_DROWN};
-  local DISTANCE = 100;
+  -- damage types that will trigger all indicators
+  local GENERIC = {
+    [DMG_GENERIC] = true,
+    [DMG_CRUSH] = true,
+    [DMG_SONIC] = true
+  }
 
-  hook.Add("EntityTakeDamage", "gsrchud_damage", function(target, dmginfo)
-    if (table.HasValue(override, dmginfo:GetDamageType()) or dmginfo:GetDamage() <= 0) then return end;
-    if (target:IsPlayer() and IsValid(dmginfo:GetAttacker())) then
-      local origin = dmginfo:GetAttacker():GetPos(); -- Position of the attacker
-  		local noHeight = Vector(target:GetPos().x, target:GetPos().y, 0); -- Ignore height, this is only for the direction
-  		local yaw = Angle(0, target:EyeAngles().y, 0); -- Get only the yaw, which is the only angle we need
-      local worldToLocal = WorldToLocal(origin, angle_zero, noHeight, yaw); -- Get the relative angle
-			local angle = worldToLocal:Angle().y; -- Take out only the yaw
+  -- distance at which all indicators will show up
+  local DISTANCE = 100 * 100
 
-      -- Show each indicator based on the direction the player is facing
-      local enums = {};
-      if (angle >= 295 or angle < 65) then
-        table.insert(enums, UP);
-      end
+  --[[ Implementation ]]--
+  hook.Add('EntityTakeDamage', GSRCHUD.hookname .. '_damage', function(_player, dmginfo)
+    if not _player:IsPlayer() or not _player:Alive() or not IsValid(dmginfo:GetAttacker()) or not IsValid(dmginfo:GetInflictor()) or math.Round(dmginfo:GetDamage()) <= 0 then return end
 
-      if (angle >= 115 and angle < 245) then
-        table.insert(enums, DOWN);
-      end
+    local origin = dmginfo:GetInflictor():GetPos() -- position of the attacker
+    local noHeight = Vector(_player:GetPos().x, _player:GetPos().y, 0) -- ignore height, this is only for the direction
+    local yaw = Angle(0, _player:EyeAngles().y, 0) -- get only the yaw, which is the only angle we need
+    local worldToLocal = WorldToLocal(origin, angle_zero, noHeight, yaw) -- get the relative angle
+    local angle = worldToLocal:Angle().y -- take out only the yaw
 
-      if (angle >= 205 and angle < 335) then
-        table.insert(enums, RIGHT);
-      end
+    -- get brackets to light up
+    local tooClose = (dmginfo:GetAttacker() == _player and dmginfo:GetDamagePosition():DistToSqr(_player:GetPos()) < DISTANCE) or GENERIC[dmginfo:GetDamageType()]
+    local up = angle >= 295 or angle < 65 or tooClose
+    local down = (angle >= 115 and angle < 245) or tooClose
+    local left = (angle >= 205 and angle < 335) or tooClose
+    local right = (angle >= 25 and angle < 155) or tooClose
 
-      if (angle >= 25 and angle < 155) then
-        table.insert(enums, LEFT);
-      end
-
-      -- If player self inflicts near damage or receives generic damage, show all indicators
-      local selfDamage = (dmginfo:GetAttacker() == target and target:GetPos():Distance(dmginfo:GetDamagePosition()) < DISTANCE);
-      if (selfDamage or table.HasValue(generic, dmginfo:GetDamageType())) then
-        enums = {0,1,2,3};
-      end
-
-      net.Start("gsrchud_damage");
-      net.WriteTable(enums);
-      net.Send(target);
-    end
-  end);
+    -- send result to player
+    net.Start(NET)
+    net.WriteBool(up)
+    net.WriteBool(down)
+    net.WriteBool(left)
+    net.WriteBool(right)
+    net.Send(_player)
+  end)
 
 end

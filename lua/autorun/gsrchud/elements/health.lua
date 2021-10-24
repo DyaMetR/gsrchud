@@ -1,52 +1,69 @@
---[[
-  HEALTH AND ARMOR ELEMENTS
-]]
+--[[------------------------------------------------------------------
+  Health indicator
+]]--------------------------------------------------------------------
 
-if CLIENT then
+-- sprites
+local CROSS, DIVIDER, NUM0 = 'cross', 'divider', 'number_0'
+local HOOK, SUIT = 'ShouldDraw', 'suit'
+local DIVIDER_MARGIN = 10
 
-  local function Health()
-    if (not GSRCHUD:IsHealthEnabled()) then return true end;
-    local localPlayer = GSRCHUD:GetLocalPlayer();
-    local scale = GSRCHUD:GetHUDScale();
-    local x, y = 10, ScrH() - 40;
-    local hp = localPlayer:Health();
-    local ap = 0;
-    if (localPlayer:IsPlayer()) then ap = localPlayer:Armor(); end
-    local crit = (hp <= 25);
+--[[ Declare number ]]--
+local NUMBER, enum = GSRCHUD.number.create(100)
 
-    local hpColor = nil;
-    local apColor = nil;
-    local sepColor = nil;
-    if (GSRCHUD:IsCustomColouringEnabled()) then
-      hpColor = GSRCHUD:GetCustomHealthColor();
-      apColor = GSRCHUD:GetCustomArmorColor();
-      sepColor = GSRCHUD:GetCustomLSepColor();
-    end
+-- highlight number when below 15
+function NUMBER:isForced()
+  return GSRCHUD.localPlayer():Health() <= 15
+end
 
-    -- HEALTH
-    local w, h = GSRCHUD:GetSpriteDimensions("cross");
-    local wOffset, hOffset = GSRCHUD:GetSpriteMargins("cross");
-    GSRCHUD:DrawNumber(x + (50 + w + wOffset) * scale, y, "health", math.max(hp, 0), scale, crit, nil, hpColor);
-    GSRCHUD:DrawSprite(x, y, "cross", scale, GSRCHUD:GetNumberAlpha("health"), crit, nil, hpColor, nil, true);
-    GSRCHUD:DrawSprite(x + (92 + wOffset) * scale, y, "separator", scale, GSRCHUD:GetNumberAlpha("health"), nil, nil, sepColor, nil, true);
+-- export number
+GSRCHUD.NUMBER_HEALTH = enum
 
-    if hp <= 15 then
-      GSRCHUD:GetNumber("health").alpha = 1;
-    end
+--[[ Create element ]]--
+local ELEMENT = GSRCHUD.element.create()
 
-    -- ARMOR
-    local aX, aY = x + math.Clamp((25 * scale) + ScrW()/6.5, 100 * scale, ScrW()), y - 4;
-    GSRCHUD:DrawNumber(aX + (96 + wOffset) * scale, y, "armor", math.Clamp(ap, 0, ap), scale, nil, nil, apColor);
+-- draw
+function ELEMENT:draw()
+  local scale = GSRCHUD.sprite.scale() -- get current scale
+  local health = GSRCHUD.localPlayer():Health()
 
-    local numberAlpha, numberCrit = GSRCHUD:GetNumberAlpha("armor"), GSRCHUD:GetCustomNumberCrit("armor");
-    GSRCHUD:DrawSprite(aX + (wOffset * scale), aY, "suit_empty", scale, numberAlpha, numberCrit, nil, apColor, nil, true);
-    GSRCHUD:DrawSprite(aX + (wOffset * scale), aY, "suit_full", scale, numberAlpha, numberCrit, math.Clamp(ap/100, 0, 1), apColor, nil, true);
+  -- sort parameters
+  local x = self.parameters.x or 16
+  local y = self.parameters.y or ScrH() - 12 * scale
+  local numOff = (self.parameters.numberOffset or -6) * scale
+  local icoOff = (self.parameters.crossOffset or 8) * scale
+  local divider = self.parameters.hideDivider
+  local low = self.parameters.low
+  if low == nil then low = health <= 25 end
 
-    if numberCrit and ap <= 15 then
-      GSRCHUD:GetNumber("armor").alpha = 1;
-    end
+  -- colours
+  local hpCol = GSRCHUD.sprite.userColour(GSRCHUD.config.getHealthColour(), low)
+  local divCol = GSRCHUD.sprite.userColour(GSRCHUD.config.getLseparatorColour())
+
+  -- refresh number
+  NUMBER:set(health)
+
+  -- draw cross
+  local w, h = GSRCHUD.sprite.drawTwin(CROSS, x, y + icoOff, NUMBER.highlight, hpCol, nil, TEXT_ALIGN_BOTTOM)
+
+  -- reserve space for the numbers
+  w = w + (GSRCHUD.sprite.getSize(NUM0, scale) * 3) + numOff
+
+  -- move the next calls where the number should begin
+  x = x + w
+
+  -- draw number
+  NUMBER:draw(x, y, TEXT_ALIGN_BOTTOM, hpCol)
+
+  -- draw divider
+  if not divider and GSRCHUD.config.getSuit() and GSRCHUD.hook.run(HOOK, SUIT) ~= false then
+    local margin = DIVIDER_MARGIN * scale
+    local _w, _h = GSRCHUD.sprite.drawTwin(DIVIDER, x + margin, y, NUMBER.highlight, divCol, nil, TEXT_ALIGN_BOTTOM)
+    w = w + _w + margin
   end
 
-  GSRCHUD:AddElement(Health);
-
+  -- export
+  self:export('width', w)
 end
+
+-- register
+GSRCHUD.element.register('health', {'CHudHealth'}, ELEMENT)

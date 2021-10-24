@@ -1,57 +1,31 @@
---[[------------
-  CUSTOM DEATH SCREEN
-]]--------------
+--[[------------------------------------------------------------------
+  Sideways camera when dying
+]]--------------------------------------------------------------------
 
-if CLIENT then
-  -- Parameters
-  local roll = 90;
+local deathcam = CreateConVar('sv_gsrchud_allow_deathcam', 1, {FCVAR_REPLICATED, FCVAR_ARCHIVE}, 'Allow the first-person sideways camera when dead.')
 
-  -- Variables
-  local cameraPos = Vector(0,0,0);
-  local alive = true;
-  local rotation = 0;
+if SERVER then return end
 
-  -- Hooks
-  local function Death()
-    if not (GSRCHUD:IsDeathScreenEnabled() and GSRCHUD:IsEnabled()) then return; end
-    if not LocalPlayer():Alive() then
-      local tr = util.TraceLine( {
-      	start = LocalPlayer():GetPos(),
-      	endpos = LocalPlayer():GetPos() - Vector(0,0,5)
-      } );
+local DEATHCAM_HOOK = 'ShouldUseDeathCam'
 
-      if not tr.Hit or alive then
-        cameraPos = LocalPlayer():GetPos() + Vector(0,0,5);
-      end
+-- configuraton
+GSRCHUD.config.createConVar('deathCam', 1, GSRCHUD.config.PARAM_CHECK)
 
-      alive = false;
+-- implementation
+hook.Add('CalcView', GSRCHUD.hookname, function(_player, origin, angles, fov, znear, zfar)
+  if LocalPlayer():Alive() or not GSRCHUD.isEnabled() or not deathcam:GetBool() or GSRCHUD.hook.run(DEATHCAM_HOOK) == false or not GSRCHUD.config.getDeathCam() then return end
 
-      if (rotation ~= 1) then
-        rotation = 1;
-      end
+  -- hide ragdoll
+  local ragdoll = LocalPlayer():GetRagdollEntity()
+  if ragdoll and IsValid(ragdoll) and ragdoll.SetNoDraw then ragdoll:SetNoDraw(true) end
 
-      if LocalPlayer():GetRagdollEntity() ~= nil and IsValid(LocalPlayer():GetRagdollEntity()) then
-        LocalPlayer():GetRagdollEntity():SetNoDraw(true);
-      end
-    else
-      if not alive then
-        rotation = 0;
-        alive = true;
-      end
-    end
-  end
-  hook.Add("Think", "gsrchud_deathscreen", Death);
+  -- generate table
+  local view = {
+    origin = _player:GetPos() + Vector(0, 0, 5),
+    angles = angles + Angle(0, 0, 90),
+    fov = fov
+  }
 
-  local function Camera( ply, origin, angles, fov, znear, zfar )
-    if LocalPlayer():Alive() or not (GSRCHUD:IsDeathScreenEnabled() and GSRCHUD:IsEnabled()) then return end;
-    local view = {};
-
-  	view.origin = cameraPos;
-  	view.angles = Angle(angles.p, angles.y, angles.r + roll * rotation);
-  	view.fov = fov;
-
-    return view;
-  end
-  hook.Add("CalcView", "gsrchud_camera", Camera);
-
-end
+  -- return it
+  return view
+end)
