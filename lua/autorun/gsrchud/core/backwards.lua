@@ -133,7 +133,8 @@ end
 
 function GSRCHUD:AddItemSprite(class, sprite)
   themeDeprecation('GSRCHUD:AddItemSprite')
-  return GSRCHUD.theme.default():setItemSprite(class, sprite)
+  if GSRCHUD.theme.default().items[class] then return end
+  return GSRCHUD.item.setSprite(class, sprite)
 end
 
 function GSRCHUD:GetItemSprite(class)
