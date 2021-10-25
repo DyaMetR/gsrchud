@@ -4,7 +4,6 @@
 
 GSRCHUD.theme = {} -- namespace
 
-local DEFAULT_THEME_NAME = 'Half-Life'
 local DEFAULT_COLOUR, DEFAULT_CRITICAL_COLOUR = Color(255, 160, 0), Color(255, 0, 0)
 
 local HOOK_THEME = 'GetTheme'
@@ -408,12 +407,13 @@ end
 
 --[[------------------------------------------------------------------
   Creates a new theme table and registers it as the default theme.
-  @return {table} default theme data
+  @param {string} default theme name
+  @param {table} theme data
+  @return {number} default theme enumerator
 ]]--------------------------------------------------------------------
-function GSRCHUD.theme.createDefault()
-  default = table.Copy(THEME)
-  default.name = DEFAULT_THEME_NAME
-  return default
+function GSRCHUD.theme.registerDefault(name, theme)
+  default = theme
+  return GSRCHUD.theme.register(name, theme)
 end
 
 --[[------------------------------------------------------------------

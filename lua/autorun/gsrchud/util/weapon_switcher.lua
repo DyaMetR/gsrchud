@@ -29,10 +29,11 @@ end
 
 --[[------------------------------------------------------------------
   Whether empty weapons should be skipped by the selector
+  @param {Weapon} weapon to check
   @return {boolean} skip
 ]]--------------------------------------------------------------------
-local function skipEmpty()
-  local _hook = GSRCHUD.hook.run(SKIPEMPTY_HOOK)
+local function skipEmpty(weapon)
+  local _hook = GSRCHUD.hook.run(SKIPEMPTY_HOOK, weapon)
   if _hook ~= nil then return _hook end
   return GSRCHUD.config.shouldSkipEmpty()
 end
@@ -165,7 +166,7 @@ local function findWeapon(slot, pos, forward, inSlot)
   local weapons = #LocalPlayer():GetWeapons() -- current weapon count
   local noAmmo = 0 -- weapons with no ammunition left
   local weapon
-  while (not weapon or not IsValid(weapon) or (not weapon:HasAmmo() and skipEmpty())) do
+  while (not weapon or not IsValid(weapon) or (not weapon:HasAmmo() and skipEmpty(weapon))) do
     -- look for the next weapon
     if forward then
       if pos < cacheLength[slot] then
@@ -253,26 +254,8 @@ local function cycleSlot(slot)
   -- position to search from
   local pos = curPos
 
-  -- if current slot is out of bounds
-  if curSlot <= 0 then
-    local weapon = LocalPlayer():GetActiveWeapon()
-    -- make sure weapon is on the cache
-    if not weaponPos[weapon] then
-      cacheWeapons(true)
-    end
-
-    -- if there are no weapons equipped, start at the first pos
-    if IsValid(weapon) and weapon:GetSlot() == slot - 1 then
-      pos = weaponPos[weapon] - 1
-    else
-      pos = 0
-    end
-  else
-    -- if the slot was different, reset pos
-    if curSlot ~= slot then
-      pos = 0
-    end
-  end
+  -- if slot is new, start from the beginning
+  if curSlot ~= slot then pos = 0 end
 
   -- search for weapon
   curSlot, curPos = findWeapon(slot, pos, true, true)
@@ -331,14 +314,14 @@ UnintrusiveBindPress.add('gsrchud', function(_player, bind, pressed, code)
   -- move backwards
   if bind == INV_PREV then
     moveCursor(false)
-    emitSound(MOVE)
+    if GSRCHUD.config.getSwitcherScrollSound() then emitSound(MOVE) end
     return true
   end
 
   -- move forward
   if bind == INV_NEXT then
     moveCursor(true)
-    emitSound(MOVE)
+    if GSRCHUD.config.getSwitcherScrollSound() then emitSound(MOVE) end
     return true
   end
 

@@ -65,7 +65,6 @@ hook.Add('PopulateToolMenu', UID, function()
     panel:NumSlider('Scale', 'gsrchud_scale', 0, 5, 2)
 
     themes, _ = panel:ComboBox('Theme', 'gsrchud_theme')
-    themes:AddChoice('Half-Life', 0) -- default theme
     for i, theme in pairs(GSRCHUD.theme.all()) do
       themes:AddChoice(theme.name, i)
     end
@@ -78,6 +77,7 @@ hook.Add('PopulateToolMenu', UID, function()
     panel:CheckBox('Ammunition indicator', 'gsrchud_ammo')
     panel:CheckBox('Weapon selector', 'gsrchud_weapon_selector')
     panel:CheckBox('Skip empty weapons', 'gsrchud_skipempty')
+    panel:CheckBox('Enable weapon scrolling sounds', 'gsrchud_switcherscrollsound')
     panel:CheckBox('Pickup history', 'gsrchud_pickup')
     panel:CheckBox('Death screen', 'gsrchud_deathcam')
     panel:CheckBox('Damage indicators', 'gsrchud_damage')
@@ -150,5 +150,6 @@ hook.Add('PopulateToolMenu', UID, function()
       panel:ControlHelp(credit[2])
     end
     panel:Help('\n' .. GSRCHUD.date)
+    panel:ControlHelp(GSRCHUD.version)
   end)
 end)

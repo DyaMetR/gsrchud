@@ -156,7 +156,7 @@ function ELEMENT:draw()
 
   -- draw slots
   for i=1, 6 do
-    local w, h = drawSlot(x, y, i, cache[i], curSlot == i, curPos, margin, hCol, sCol, mode, scale)
+    local w, h = drawSlot(x, y, i, cache[i], curSlot == i and curPos > 0, curPos, margin, hCol, sCol, mode, scale)
     x = x + w + (margin * scale)
   end
 end

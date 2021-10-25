@@ -85,7 +85,7 @@ if SERVER then
 
   --[[ Implementation ]]--
   hook.Add('EntityTakeDamage', GSRCHUD.hookname .. '_damage', function(_player, dmginfo)
-    if not _player:IsPlayer() or not _player:Alive() or not IsValid(dmginfo:GetAttacker()) or not IsValid(dmginfo:GetInflictor()) or math.Round(dmginfo:GetDamage()) <= 0 then return end
+    if not _player:IsPlayer() or not _player:Alive() or not IsValid(dmginfo:GetAttacker()) or not IsValid(dmginfo:GetInflictor()) or math.floor(dmginfo:GetDamage()) <= 0 then return end
 
     local origin = dmginfo:GetInflictor():GetPos() -- position of the attacker
     local noHeight = Vector(_player:GetPos().x, _player:GetPos().y, 0) -- ignore height, this is only for the direction

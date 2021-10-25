@@ -81,4 +81,4 @@ THEME:addPreDraw('ammo', function(element)
 end)
 
 --[[ Register ]]--
-GSRCHUD.THEME_SVENCOOP = GSRCHUD.theme.register('Sven-Coop', THEME)
+GSRCHUD.THEME_SVENCOOP = GSRCHUD.theme.register('Sven Co-op', THEME)

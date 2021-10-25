@@ -194,9 +194,21 @@ end)
 --[[ Picked up weapon ]]--
 hook.Add('HUDWeaponPickedUp', GSRCHUD.hookname, function(weapon)
   if not GSRCHUD.isEnabled() or not GSRCHUD.hasSuit() or not GSRCHUD.config.getPickup() then return end
-  addPickup(PICKUP_WEAPON, {weapon = weapon})
-  if GSRCHUD.hook.run(SOUND_HOOK) == false then return end
-  surface.PlaySound(WEAPON_PICKUP_SOUND)
+  addPickup(PICKUP_WEAPON, {weapon = weapon}) -- add pickup to screen
+
+  -- select sound
+  local sound = WEAPON_PICKUP_SOUND
+  local override = GSRCHUD.hook.run(SOUND_HOOK)
+  if override ~= nil then
+    if isbool(override) then
+      if not override then return end
+    elseif isstring(override) then
+      sound = override
+    end
+  end
+
+  -- play sound
+  surface.PlaySound(sound)
 end)
 
 --[[ Picked up item ]]--

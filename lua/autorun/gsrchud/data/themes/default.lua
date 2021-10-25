@@ -12,8 +12,7 @@ local TFCHUD5, TFCHUD6 = 'tfchud5', 'tfchud6'
 local PAIN0, PAIN1, PAIN2, PAIN3 = '640pain0', '640pain1', '640pain2', '640pain3'
 
 -- create theme
-local THEME = GSRCHUD.theme.createDefault()
-GSRCHUD.THEME_HALFLIFE = 0 -- out of bounds (forcing the addon to fallback to default)
+local THEME = GSRCHUD.theme.create()
 
 --[[ Files ]]--
 THEME:addTexture(BUCKET, surface.GetTextureID('gsrchud/default/640bucket'), 256, 64)
@@ -101,6 +100,7 @@ THEME:setHazardSprite(DMG_SLOWBURN, 'dmg_heat')
 THEME:setHazardSprite(DMG_NERVEGAS, 'dmg_gas')
 THEME:setHazardSprite(DMG_RADIATION, 'dmg_rad')
 THEME:setHazardSprite(DMG_SHOCK, 'dmg_shock')
+THEME:setHazardSprite(DMG_VEHICLE, 'dmg_cold')
 
 --[[ Vanilla weapons ]]--
 THEME:addWeaponSprite('weapon_crowbar', {
@@ -280,3 +280,6 @@ THEME:setAmmoSprite('GrenadeHL1', 'ammo_Grenade')
 THEME:setAmmoSprite('TripMine', 'ammo_slam')
 THEME:setAmmoSprite('12mmRound', 'ammo_357')
 THEME:setAmmoSprite('weapon_medkit', 'item_healthkit', 'item_healthkit')
+
+--[[ Register as default ]]--
+GSRCHUD.THEME_HALFLIFE = GSRCHUD.theme.registerDefault('Half-Life', THEME)

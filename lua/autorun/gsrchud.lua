@@ -1,6 +1,6 @@
 --[[------------------------------------------------------------------
   GoldSrc HUD
-  Version 2.0.3
+  Version 2.1.1
   October 25th, 2021
   Made by DyaMetR
   * full credits found in the details below
@@ -15,14 +15,14 @@ if CLIENT then
   -- addon information
   GSRCHUD.name      = 'GoldSrc HUD'
   GSRCHUD.category  = 'DyaMetR'
-  GSRCHUD.version   = '2.0.3'
+  GSRCHUD.version   = '2.1.1'
   GSRCHUD.date      = 'October 25th, 2021'
   GSRCHUD.credits   = { -- {name, contribution}
     {'DyaMetR', 'Developer'},
     {'Valve Software', 'Original layout design\nHalf-Life sprites\nCounter-Strike sprites'},
     {'Gearbox Interactive', 'Half-Life: Opposing Force sprites\nHalf-Life: Blue Shift sprites'},
     {'Turtle Rock Studios', 'Counter-Strike: Condition Zero Deleted Scenes sprites'},
-    {'Sven-Coop team', 'Sven-Coop layout design\nSven-Coop sprites'},
+    {'Sven-Coop team', 'Sven Co-op layout design\nSven-Coop sprites'},
     {'ruMpel', 'Afraid of Monsters layout design\nAfraid of Monsters sprites'},
     {'Ghoul-bb', 'Half-Life: Weapon Edition sprites'},
     {'Black Widow Games', 'They Hunger layout design\nThey Hunger sprites'},

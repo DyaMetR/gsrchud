@@ -3,6 +3,7 @@
 ]]--------------------------------------------------------------------
 
 local HOOK = GSRCHUD.hookname .. '_loading'
+local HOOK_NAME = 'ShowLoadingScreen'
 local DELAY = 2
 local offset, delay = 0, 0
 
@@ -13,27 +14,42 @@ GSRCHUD.config.createConVar('loading', 1, GSRCHUD.PARAM_CHECK)
 cvars.AddChangeCallback(HOOK, function(cvar, old, new)
   local enabled = tonumber(new)
   if not GSRCHUD.loadingPanel or not enabled then return end
-  GSRCHUD.loadingPanel:SetVisible(enabled > 0)
+  local visible = enabled > 0 -- whether it should be visible
+
+  -- check any hook overrides
+  local override = GSRCHUD.hook.run(HOOK_NAME)
+  if override ~= nil then visible = override end
+
+  -- change visibility
+  GSRCHUD.loadingPanel:SetVisible(visible)
+
+  -- end animation if we're disabling it
+  if not visible then GSRCHUD.loadingPanel:SetOffset(1) end
 end)
 
 --[[ Run code on post initialization ]]--
 hook.Add('InitPostEntity', HOOK, function()
+  -- get visibility
+  local visible = GSRCHUD.isEnabled() and GSRCHUD.config.getLoading()
+  local override = GSRCHUD.hook.run(HOOK_NAME)
+  if override ~= nil then visible = override end
+
+  -- create panel
   local panel = vgui.Create('DLoadingScreen')
   panel:SetSize(ScrW(), ScrH())
   panel:SetPlayer(LocalPlayer())
-  if GSRCHUD.config.getLoading() then
-    panel:SetOffset(0)
-  else
-    panel:SetOffset(1) -- start with animation finished (also hides it)
+  if not visible then
+    offset = 1 -- start with animation finished (also hides it)
   end
-  panel:SetVisible(GSRCHUD.isEnabled())
+  panel:SetOffset(offset)
+  panel:SetVisible(visible)
   delay = CurTime() + DELAY -- apply initial delay
   GSRCHUD.loadingPanel = panel -- store reference
 end)
 
 --[[ Run animation on the think loop ]]--
 hook.Add('Think', HOOK, function()
-  if not GSRCHUD.isEnabled() or delay > CurTime() or offset >= 1 or not GSRCHUD.config.getLoading() or not GSRCHUD.loadingPanel then return end
+  if offset >= 1 or delay > CurTime() or not GSRCHUD.loadingPanel then return end
   offset = offset + RealFrameTime() * .66
   GSRCHUD.loadingPanel:SetOffset(offset)
 end)
@@ -45,9 +61,17 @@ end)
 
 --[[ Add command to reset loading screen status ]]--
 concommand.Add(GSRCHUD.hookname .. '_reset_loading', function(_, _, _)
-  if not GSRCHUD.isEnabled() then return end
-  if GSRCHUD.config.getLoading() then GSRCHUD.loadingPanel:SetOffset(0) end
+  -- get visibility
+  local visible = GSRCHUD.isEnabled() and GSRCHUD.config.getLoading()
+  local override = GSRCHUD.hook.run(HOOK_NAME)
+  if override ~= nil then visible = override end
+
+  -- if not visible, do not run
+  if not visible then return end
+
+  -- reset animation
+  GSRCHUD.loadingPanel:SetOffset(0) -- reset offset
   GSRCHUD.loadingPanel:SetupPlayer(GSRCHUD.loadingPanel.player) -- refresh the player model
-  delay = CurTime() + DELAY
+  delay = CurTime() + DELAY -- place a delay
   offset = 0
 end)
