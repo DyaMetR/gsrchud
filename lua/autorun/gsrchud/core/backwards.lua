@@ -66,7 +66,6 @@ end
 
 function GSRCHUD:AddAmmoIcon(ammoType, sprite)
   deprecated('GSRCHUD:AddAmmoIcon', 'GSRCHUD.ammunition.setSprite')
-  print(ammoType, sprite)
   if GSRCHUD.ammunition.has(ammoType) then return end
   GSRCHUD.ammunition.setSprite(ammoType, sprite)
 end
@@ -83,9 +82,8 @@ end
 
 function GSRCHUD:AddWeaponIcon(weapon, texture, notSlotSized)
   themeDeprecation('GSRCHUD:AddWeaponIcon')
-  local default = GSRCHUD.theme.default()
-  if default.weapons[weapon] then return end
-  default:setWeaponSprite(weapon, texture, texture)
+  if GSRCHUD.theme.default().weapons[weapon] then return end
+  GSRCHUD.weapon.setSprite(weapon, texture, texture)
 end
 
 function GSRCHUD:GetWeaponIcon(weapon)
@@ -169,7 +167,7 @@ end
 
 function GSRCHUD:AddWeaponSpritesheet(weapon, texture, fileW, fileH, x, y, w, h)
   themeDeprecation('GSRCHUD:AddWeaponSpritesheet')
-  print(weapon, texture)
+  if GSRCHUD.theme.default().weapons[weapon] then return end
   local data = {texture, fileW, fileH, x or 0, y or 0, w or fileW, h or fileH}
   GSRCHUD.weapon.addTextureUV(weapon, {weapon = data, weapon_s = data}, true)
 end
