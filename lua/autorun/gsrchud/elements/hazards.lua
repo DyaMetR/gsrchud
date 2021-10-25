@@ -1,137 +1,94 @@
---[[
-  BLINKING ICONS FOR HAZARDS
-]]
+--[[------------------------------------------------------------------
+  Hazards
+]]--------------------------------------------------------------------
+
+local NET = 'gsrchud_hazards'
 
 if CLIENT then
 
-  -- Parameters
-  local MAX_TIME = 3;
-  local FREQ = 0.016;
+  local MAX_TIME = 3
+  local BASE_ALPHA = 255
 
-  -- Variables
-  local hazards = {};
-  local time = 0;
-  local blink = 0;
-  local blinked = false;
-  local think = 0;
+  local hazards = {}
+  local hazard_types = {}
+  local time = 0
+  local alpha = 0
+  local blinked = false
 
-  -- Methods
-  --[[
-    Returns whether the animation already ended
-    @return {boolean} animationEnded
-  ]]
-  local function AnimationTimeEnded()
-    return time < CurTime();
-  end
+  --[[ Create element ]]--
+  local ELEMENT = GSRCHUD.element.create()
 
-  --[[
-    Plays the animation for the icons
-    @void
-  ]]
-  local function Animation()
-    if (#hazards > 0) then
+  -- draw
+  function ELEMENT:draw()
+    local scale = GSRCHUD.sprite.scale()
+    local _alpha = GSRCHUD.sprite.alpha() / GSRCHUD.DEFAULT_ALPHA
 
-      if (blinked) then
+    -- sort parameters
+    local x = self.parameters.x or 8 * scale
+    local y = self.parameters.y or ScrH() - 63 * scale
 
-        if (blink - FREQ <= 0) then
+    -- do not run if there are no hazards to display
+    if #hazards <= 0 then return end
 
-          if (AnimationTimeEnded()) then
-            hazards = {};
-          else
-            blinked = false;
-          end
+    -- make icons blink
+    if blinked then
+      alpha = math.max(alpha - RealFrameTime(), 0)
+      blinked = alpha > 0
+    else
+      alpha = math.min(alpha + RealFrameTime(), 1)
+      blinked = alpha >= 1
+    end
 
-        else
+    -- end blinking after some time
+    if time < CurTime() and not blinked and alpha <= 0 then
+      table.Empty(hazards)
+      table.Empty(hazard_types)
+    end
 
-          if (think < CurTime()) then
-            blink = blink - FREQ;
-            think = CurTime() + 0.01;
-          end
-        end
-
-      else
-
-        if (blink + FREQ > 1) then
-          blink = 1;
-          blinked = true;
-        else
-          if (think < CurTime()) then
-            blink = blink + FREQ;
-            think = CurTime() + 0.01;
-          end
-        end
-
-      end
-
+    -- draw tray
+    for _, hazard in pairs(hazards) do
+      local w, h = GSRCHUD.hazard.draw(x, y, hazard, GSRCHUD.sprite.userColour(GSRCHUD.config.getHealthColour()), nil, TEXT_ALIGN_BOTTOM, nil, BASE_ALPHA * alpha * _alpha)
+      y = y - (h or 0)
     end
   end
 
-  --[[
-    Draws the icons
-    @void
-  ]]
-  local function Hazards()
-    if (not GSRCHUD:IsHazardEnabled()) then return true end;
-    local scale = GSRCHUD:GetHUDScale();
-    local x, y = 10, ScrH() - 54;
-    local h = 64 * scale;
+  -- register
+  GSRCHUD.element.register('hazards', {'CHudPoisonDamageIndicator'}, ELEMENT)
 
-    local color = nil;
-    if (GSRCHUD:IsCustomColouringEnabled()) then
-      color = GSRCHUD:GetCustomHealthColor();
-    end
+  --[[ Receive hazards ]]--
+  net.Receive(NET, function(len)
+      -- receive hazard type
+      local hazard = net.ReadFloat()
 
-    for k, hazard in pairs(hazards) do
-      if GSRCHUD:HasHazardCustomSprite(hazard) then
-        GSRCHUD:DrawCustomSprite(GSRCHUD:GetHazard(hazard), x, y - h * k, scale, blink * 255, nil, nil, color);
-      else
-        GSRCHUD:DrawSprite(x, y - h * k, GSRCHUD:GetHazard(hazard), scale, blink * 255, nil, nil, color);
-      end
-    end
-    Animation();
-  end
-  GSRCHUD:AddElement(Hazards);
+      -- if there's no valid hazard icon, skip
+      if not GSRCHUD.hazard.has(hazard, GSRCHUD.getCurrentTheme()) then return end
 
-  --[[
-    Returns whether a specific sprite is already in use by another hazard or not
-    @param {string} sprite
-    @return {boolean} inUse
-  ]]
-  local function TextureBeingUsed(sprite)
-    for k, hazard in pairs(hazards) do
-      if (GSRCHUD:GetHazard(hazard) == sprite) then
-        return true;
-      end
-    end
-    return false;
-  end
+      -- reset delay
+      time = CurTime() + MAX_TIME
 
-  --[[
-    Adds a hazard icon to the HUD
-    @param {number} dmgType
-    @void
-  ]]
-  local function AddHazard(dmgType)
-    if (not GSRCHUD:IsValidHazard(dmgType)) then return false end;
-    if (not table.HasValue(hazards, dmgType) and not TextureBeingUsed(GSRCHUD:GetHazard(dmgType))) then
-      table.insert(hazards, dmgType);
-    end
-    time = CurTime() + MAX_TIME;
-  end
+      -- if it's already present, do not add
+      if hazard_types[hazard] then return end
 
-  net.Receive("gsrchud_hazards", function(len)
-    local damage = net.ReadFloat();
-    AddHazard(damage);
-  end);
+      -- add hazard to tray
+      table.insert(hazards, hazard)
+
+      -- register hazard type to avoid duplicates
+      hazard_types[hazard] = true
+    end)
 end
 
 if SERVER then
-  util.AddNetworkString("gsrchud_hazards");
-  hook.Add("EntityTakeDamage", "gsrchud_hazards", function(target, dmginfo)
-    if target:IsPlayer() then
-      net.Start("gsrchud_hazards");
-      net.WriteFloat(dmginfo:GetDamageType());
-      net.Send(target);
-    end
-  end);
+
+  -- create network string
+  util.AddNetworkString(NET)
+
+  -- detect damage type inflicted
+  hook.Add('EntityTakeDamage', GSRCHUD.hookname .. '_hazards', function(_player, dmginfo)
+    if not _player:IsPlayer() or not _player:Alive() or math.Round(dmginfo:GetDamage()) <= 0 then return end -- players only
+    -- send new hazard
+    net.Start(NET)
+    net.WriteFloat(dmginfo:GetDamageType()) -- would use net.WriteInt but that'd break addons
+    net.Send(_player)
+  end)
+
 end

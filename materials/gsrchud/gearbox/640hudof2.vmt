@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"gsrchud/gearbox/640hudof2"
+	"$additive"	"1"
+	"$vertexalpha"	"1"
+	"$vertexcolor"	"1"
+}
