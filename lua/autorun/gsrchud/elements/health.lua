@@ -24,6 +24,7 @@ local ELEMENT = GSRCHUD.element.create()
 -- draw
 function ELEMENT:draw()
   local scale = GSRCHUD.sprite.scale() -- get current scale
+  local spacing = GSRCHUD.config.getDynamicSpacing()
   local health = GSRCHUD.localPlayer():Health()
 
   -- sort parameters
@@ -45,8 +46,12 @@ function ELEMENT:draw()
   -- draw cross
   local w, h = GSRCHUD.sprite.drawTwin(CROSS, x, y + icoOff, NUMBER.highlight, hpCol, nil, TEXT_ALIGN_BOTTOM)
 
+  -- get how many digits we need space for
+  local digits = 3
+  if spacing then digits = math.max(math.floor(math.log10(health)) + 1, digits) end
+
   -- reserve space for the numbers
-  w = w + (GSRCHUD.sprite.getSize(NUM0, scale) * 3) + numOff
+  w = w + (GSRCHUD.sprite.getSize(NUM0, scale) * digits) + numOff
 
   -- move the next calls where the number should begin
   x = x + w

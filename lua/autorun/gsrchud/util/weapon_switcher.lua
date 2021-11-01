@@ -287,7 +287,7 @@ local SELECT = 'gsrchud/default/wpn_select.wav'
 
 -- emits a sound from the weapon selector
 local function emitSound(sound)
-  LocalPlayer():EmitSound(sound, nil, nil, 0.33, CHAN_WEAPON)
+  LocalPlayer():EmitSound(sound, nil, nil, 0.33, CHAN_ITEM)
 end
 
 --[[------------------------------------------------------------------

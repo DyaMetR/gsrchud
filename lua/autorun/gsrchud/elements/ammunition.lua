@@ -18,6 +18,7 @@ local ELEMENT = GSRCHUD.element.create()
 function ELEMENT:draw()
   local localPlayer = GSRCHUD.localPlayer()
   local scale = GSRCHUD.sprite.scale()
+  local spacing = GSRCHUD.config.getDynamicSpacing()
   local weapon = localPlayer:GetActiveWeapon()
 
   local isValid, primary, secondary, clip1, reserve, alt = false, 0, 0, -1, 0, 0
@@ -88,9 +89,13 @@ function ELEMENT:draw()
   local w, h = GSRCHUD.ammunition.draw(x + icox, y + icoy - _h, primaryName, NUMBER.highlight, iconCol, TEXT_ALIGN_RIGHT)
   x = x - w
 
+  -- get how many digits we need space for
+  local digits = 3
+  if spacing then digits = math.max(math.floor(math.log10(reserve)) + 1, digits) end
+
   -- draw reserve ammunition
   GSRCHUD.number.render(reserve, x, y, TEXT_ALIGN_BOTTOM, NUMBER.highlight, colour2)
-  x = x - _w * 3.5
+  x = x - _w * (digits + .5)
 
   -- do not draw clip if invalid
   if clip1 <= -1 then return end
