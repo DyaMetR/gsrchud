@@ -18,6 +18,7 @@ local ELEMENT = GSRCHUD.element.create()
 function ELEMENT:draw()
   local localPlayer = GSRCHUD.localPlayer()
   local scale = GSRCHUD.sprite.scale() -- get current scale
+  local spacing = GSRCHUD.config.getDynamicSpacing()
   local health = GSRCHUD.element.import('health')
 
   -- sort parameters
@@ -37,7 +38,7 @@ function ELEMENT:draw()
   colour = GSRCHUD.sprite.userColour(GSRCHUD.config.getSuitColour(), colour)
 
   -- refresh number
-  local suit = localPlayer:Armor()
+  local suit = math.max(localPlayer:Armor(), 0)
   NUMBER:set(suit)
 
   -- get suit icon vertical origin
@@ -53,7 +54,9 @@ function ELEMENT:draw()
   render.SetScissorRect(0, 0, 0, 0, false)
 
   -- move next calls to icon's side and reserve space for numbers
-  x = x + _w + (GSRCHUD.sprite.getSize(NUM0, scale) * 3)
+  local digits = 3
+  if spacing then digits = math.max(math.floor(math.log10(suit)) + 1, digits) end
+  x = x + _w + (GSRCHUD.sprite.getSize(NUM0, scale) * digits)
 
   -- draw number
   NUMBER:draw(x + numOff, y, TEXT_ALIGN_BOTTOM, colour)

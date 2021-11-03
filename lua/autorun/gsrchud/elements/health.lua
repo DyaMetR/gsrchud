@@ -25,7 +25,7 @@ local ELEMENT = GSRCHUD.element.create()
 function ELEMENT:draw()
   local scale = GSRCHUD.sprite.scale() -- get current scale
   local spacing = GSRCHUD.config.getDynamicSpacing()
-  local health = GSRCHUD.localPlayer():Health()
+  local health = math.max(GSRCHUD.localPlayer():Health(), 0)
 
   -- sort parameters
   local x = self.parameters.x or 16
