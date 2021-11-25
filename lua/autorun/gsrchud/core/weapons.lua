@@ -159,7 +159,9 @@ function GSRCHUD.weapon.draw(x, y, weapon, selected, colour, scale, alpha, theme
 
     -- draw the weapon's name if they have no icon
     if not weapon.DrawWeaponSelection then
-      draw.SimpleText(string.format(MISSING_ICON, language.GetPhrase(weapon:GetPrintName())), 'default', x + frameW * .5, y + frameH * .5, GSRCHUD.sprite.colour(colour, theme), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+      local name = weapon:GetClass() -- default to class
+      if weapon.GetPrintName then name = weapon:GetPrintName() end -- fail-proof printname retrieving
+      draw.SimpleText(string.format(MISSING_ICON, language.GetPhrase(name)), 'default', x + frameW * .5, y + frameH * .5, GSRCHUD.sprite.colour(colour, theme), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     else -- otherwise, draw the icon
       -- disable bouncy icon
       local bounce = weapon.BounceWeaponIcon
