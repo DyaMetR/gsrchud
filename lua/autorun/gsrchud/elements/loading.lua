@@ -52,10 +52,14 @@ hook.Add('Think', HOOK, function()
   if offset >= 1 or delay > CurTime() or not GSRCHUD.loadingPanel then return end
   offset = offset + RealFrameTime() * .66
   GSRCHUD.loadingPanel:SetOffset(offset)
+
+  -- upon finishing, resize the panel so it doesn't bother other UI elements
+  if offset >= 1 then GSRCHUD.loadingPanel:SetSize(0, 0) end
 end)
 
 --[[ Resize panel if screen size changes ]]--
 hook.Add('OnScreenSizeChanged', HOOK, function(_w, _h)
+  if offset >= 1 then return end -- do not update if the animation ended
   GSRCHUD.loadingPanel:SetSize(ScrW(), ScrH())
 end)
 
@@ -70,6 +74,7 @@ concommand.Add(GSRCHUD.hookname .. '_reset_loading', function(_, _, _)
   if not visible then return end
 
   -- reset animation
+  GSRCHUD.loadingPanel:SetSize(ScrW(), ScrH()) -- reset size
   GSRCHUD.loadingPanel:SetOffset(0) -- reset offset
   GSRCHUD.loadingPanel:SetupPlayer(GSRCHUD.loadingPanel.player) -- refresh the player model
   delay = CurTime() + DELAY -- place a delay
