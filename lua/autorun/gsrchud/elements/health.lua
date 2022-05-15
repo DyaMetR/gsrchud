@@ -2,6 +2,9 @@
   Health indicator
 ]]--------------------------------------------------------------------
 
+-- health amount at which the number stays highlighted
+local CRITICAL_HEALTH = 15
+
 -- sprites
 local CROSS, DIVIDER, NUM0 = 'cross', 'divider', 'number_0'
 local HOOK, SUIT = 'ShouldDraw', 'suit'
@@ -9,11 +12,6 @@ local DIVIDER_MARGIN = 10
 
 --[[ Declare number ]]--
 local NUMBER, enum = GSRCHUD.number.create(100)
-
--- highlight number when below 15
-function NUMBER:isForced()
-  return GSRCHUD.localPlayer():Health() <= 15
-end
 
 -- export number
 GSRCHUD.NUMBER_HEALTH = enum
@@ -42,6 +40,11 @@ function ELEMENT:draw()
 
   -- refresh number
   NUMBER:set(health)
+
+  -- if health is below critical level, force highlighting
+  if GSRCHUD.localPlayer():Health() <= CRITICAL_HEALTH then
+    NUMBER.highlight = 1
+  end
 
   -- draw cross
   local w, h = GSRCHUD.sprite.drawTwin(CROSS, x, y + icoOff, NUMBER.highlight, hpCol, nil, TEXT_ALIGN_BOTTOM)

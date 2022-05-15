@@ -58,6 +58,7 @@ function PANEL:Init()
   -- initialize label
   local label = vgui.Create('DLabel', self)
   label:SetFont(FONT_NAME)
+  label:SetTextColor(DEFAULT)
   label:SetText('L   O   A   D   I   N   G')
   self.label = label
 end

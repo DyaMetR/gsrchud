@@ -39,14 +39,6 @@ function NUMBER:set(value)
 end
 
 --[[------------------------------------------------------------------
-  Returns whether the number should be highlighted.
-  @return {boolean} should highlight
-]]--------------------------------------------------------------------
-function NUMBER:isForced()
-  return false
-end
-
---[[------------------------------------------------------------------
   Draws the given number.
   @param {number} x
   @param {number} y
@@ -59,9 +51,7 @@ end
   @return {number} height
 ]]--------------------------------------------------------------------
 function NUMBER:draw(x, y, align, colour, scale, alpha, theme)
-  local _alpha = self.highlight
-  if self:isForced() then _alpha = 1 end
-  return GSRCHUD.number.render(self.value, x, y, align, _alpha, colour, scale, alpha, theme)
+  return GSRCHUD.number.render(self.value, x, y, align, self.highlight, colour, scale, alpha, theme)
 end
 
 --[[------------------------------------------------------------------

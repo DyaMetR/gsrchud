@@ -49,7 +49,7 @@ function ELEMENT:draw()
 
   -- draw suit foreground
   local _w, _h = GSRCHUD.sprite.getSize(fullSprite, scale)
-  render.SetScissorRect(x, _y - _h * suit * .01, x + _w, _y + _h, true)
+  render.SetScissorRect(x, _y - _h * suit / localPlayer:GetMaxArmor(), x + _w, _y + _h, true)
   GSRCHUD.sprite.drawTwin(fullSprite, x, _y, NUMBER.highlight, colour, nil, TEXT_ALIGN_BOTTOM)
   render.SetScissorRect(0, 0, 0, 0, false)
 
