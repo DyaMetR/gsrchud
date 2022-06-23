@@ -138,14 +138,14 @@ function GSRCHUD.sprite.colour(colour, theme)
 	local _colour, crit = GSRCHUD.hook.run(HOOK_COLOUR) -- check for an override
 
 	-- use user colours if an override is not provided
-	if GSRCHUD.config.isColouringEnabled() and not crit then
+	if GSRCHUD.config.isColouringEnabled() and not _colour then
 		crit = GSRCHUD.config.getCritColour()
 	end
 
 	-- select colour to use
 	if colour then
 		if isbool(colour) then
-			return crit
+			return crit or _theme.critColour
 		else
 			return _colour or colour
 		end
@@ -163,9 +163,19 @@ end
 ]]--------------------------------------------------------------------
 function GSRCHUD.sprite.userColour(colour, isCrit, theme)
 	theme = theme or GSRCHUD.theme.used()
-	if not GSRCHUD.config.isColouringEnabled() then colour = GSRCHUD.theme.get(theme).colour end
-	if isCrit then colour = true end
-	return GSRCHUD.sprite.colour(colour, theme)
+	if isCrit then
+		if isbool(isCrit) then
+			return true
+		else
+			return isCrit
+		end
+	else
+		if not GSRCHUD.config.isColouringEnabled() then
+			return GSRCHUD.theme.get(theme).colour
+		else
+			return colour
+		end
+	end
 end
 
 --[[------------------------------------------------------------------
