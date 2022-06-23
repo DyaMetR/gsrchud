@@ -49,7 +49,7 @@ local colour = Color(255, 230, 75, 0) -- start transparent
 
 -- override pickup
 hook.Add('GSRCHUDPickup', GSRCHUD.hookname .. '_bhl', function()
-  if GSRCHUD.config.getTheme() ~= GSRCHUD.THEME_BRUTALHALFLIFE then return end
+  if GSRCHUD.theme.used() ~= GSRCHUD.THEME_BRUTALHALFLIFE then return end
   colour.a = 10
   return true
 end)

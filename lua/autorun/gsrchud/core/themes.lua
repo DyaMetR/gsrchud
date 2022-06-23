@@ -470,19 +470,16 @@ end
   @return {table} theme's data
 ]]--------------------------------------------------------------------
 function GSRCHUD.theme.get(theme)
-  -- check for hook overrides
-  local override = GSRCHUD.hook.run(HOOK_THEME)
+	if not theme then return default end
+	return themes[theme] or default
+end
 
-  -- select theme to use
-  if not theme or not themes[theme] then
-    if not override or not themes[override] then
-      return default
-    else
-      return themes[override]
-    end
-  end
-
-  return themes[theme] or default
+--[[------------------------------------------------------------------
+  Returns the theme currently used by the user.
+	@return {THEME_} theme
+]]--------------------------------------------------------------------
+function GSRCHUD.theme.used()
+	return GSRCHUD.hook.run(HOOK_THEME) or GSRCHUD.config.getTheme()
 end
 
 --[[------------------------------------------------------------------

@@ -93,7 +93,7 @@ end
 ]]--------------------------------------------------------------------
 GSRCHUD.config.createConVar('enabled', 1, GSRCHUD.config.PARAM_CHECK, 'is%s')
 GSRCHUD.config.createConVar('scale', 1, GSRCHUD.config.PARAM_NUMERIC)
-GSRCHUD.config.createConVar('theme', 0, GSRCHUD.config.PARAM_NUMERIC)
+GSRCHUD.config.createConVar('theme', GSRCHUD.THEME_HALFLIFE, GSRCHUD.config.PARAM_NUMERIC)
 GSRCHUD.config.createConVar('noSuit', 0, GSRCHUD.config.PARAM_CHECK, 'drawWith%s')
 GSRCHUD.config.createConVar('skipEmpty', 1, GSRCHUD.config.PARAM_CHECK, 'should%s')
 GSRCHUD.config.createConVar('alpha', 100, GSRCHUD.config.PARAM_NUMERIC)

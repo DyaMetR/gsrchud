@@ -104,7 +104,7 @@ end
 ]]--------------------------------------------------------------------
 function GSRCHUD.getCurrentColour()
   if GSRCHUD.config.isColouringEnabled() then return GSRCHUD.config.getThemeColour() end
-  return GSRCHUD.theme.get(GSRCHUD.config.getTheme()).colour
+  return GSRCHUD.theme.get(GSRCHUD.getCurrentTheme()).colour
 end
 
 -- [[ Hide default HUD elements ]] --

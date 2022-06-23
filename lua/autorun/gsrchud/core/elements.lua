@@ -112,7 +112,7 @@ function GSRCHUD.element.draw()
     element:clear()
 
     -- get current theme
-    local theme = GSRCHUD.theme.get(GSRCHUD.config.getTheme())
+    local theme = GSRCHUD.theme.get(GSRCHUD.theme.used())
 
     -- call preDraw functions from base classes
     local baseClass = theme.baseClass

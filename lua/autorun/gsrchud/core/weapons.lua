@@ -132,7 +132,7 @@ function GSRCHUD.weapon.draw(x, y, weapon, selected, colour, scale, alpha, theme
   if not IsValid(weapon) then return end -- do not draw if the weapon isn't valid
   scale = scale or GSRCHUD.sprite.scale()
   alpha = alpha or DEFAULT_ALPHA
-  theme = theme or GSRCHUD.config.getTheme()
+  theme = theme or GSRCHUD.theme.used()
   local _theme = GSRCHUD.theme.get(theme)
   local class = weapon:GetClass()
   local icon = _theme.weapons[class] or GSRCHUD.theme.default().weapons[class]

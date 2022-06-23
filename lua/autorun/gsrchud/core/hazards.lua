@@ -75,7 +75,7 @@ end
   @return {number} height
 ]]--------------------------------------------------------------------
 function GSRCHUD.hazard.getSize(hazard, theme)
-  local _theme = GSRCHUD.theme.get(theme or GSRCHUD.config.getTheme())
+  local _theme = GSRCHUD.theme.get(theme or GSRCHUD.theme.used())
   local icon = _theme.hazards[hazard] or GSRCHUD.theme.default().hazards[hazard]
   if not icon then return 0, 0 end
   if icon.isSprite then
@@ -100,7 +100,7 @@ end
   @return {number} icon height
 ]]--------------------------------------------------------------------
 function GSRCHUD.hazard.draw(x, y, hazard, colour, halign, valign, scale, alpha, theme)
-  theme = theme or GSRCHUD.config.getTheme()
+  theme = theme or GSRCHUD.theme.used()
   local _theme = GSRCHUD.theme.get(theme)
   local icon = _theme.hazards[hazard] or GSRCHUD.theme.default().hazards[hazard]
   if not icon then return end

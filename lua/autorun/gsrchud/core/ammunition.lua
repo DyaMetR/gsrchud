@@ -64,7 +64,7 @@ end
   @return {boolean} has ammunition type
 ]]--------------------------------------------------------------------
 function GSRCHUD.ammunition.has(ammoType, theme)
-  return GSRCHUD.theme.get(theme or GSRCHUD.config.getTheme()).ammo[ammoType] or GSRCHUD.theme.default().ammo[ammoType]
+  return GSRCHUD.theme.get(theme or GSRCHUD.theme.used()).ammo[ammoType] or GSRCHUD.theme.default().ammo[ammoType]
 end
 
 --[[------------------------------------------------------------------
@@ -101,7 +101,7 @@ end
   @return {number} icon height
 ]]--------------------------------------------------------------------
 function GSRCHUD.ammunition.draw(x, y, ammoType, highlight, colour, halign, valign, scale, alpha, theme)
-  theme = theme or GSRCHUD.config.getTheme()
+  theme = theme or GSRCHUD.theme.used()
   local _theme = GSRCHUD.theme.get(theme)
   local icon = _theme.ammo[ammoType] or GSRCHUD.theme.default().ammo[ammoType] or _theme.ammo[DEFAULT_AMMO] or GSRCHUD.theme.default().ammo[DEFAULT_AMMO]
   if not icon then return end
