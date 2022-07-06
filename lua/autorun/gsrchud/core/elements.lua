@@ -105,8 +105,11 @@ function GSRCHUD.element.draw()
     -- check for override
     local shouldDraw = GSRCHUD.hook.run(SHOULDDRAW_HOOK, id)
 
+		-- export hidden status
+		element.drawn = shouldDraw ~= false
+
     -- if the element is disabled, do not draw
-    if (element.convar and not element.convar:GetBool()) or shouldDraw == false then continue end
+    if (element.convar and not element.convar:GetBool()) or not element.drawn then continue end
 
     -- clear previously set parameters before the next draw call
     element:clear()

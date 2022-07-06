@@ -8,6 +8,7 @@
 local MAX_SLOTS = 6 -- maximum number of weapon slots
 
 -- Constants
+local HUD_ELEMENT = 'weapon_selector'
 local SKIPEMPTY_HOOK, SLOT_HOOK = 'ShouldSkipEmptyWeapons', 'GetWeaponSlot'
 local PHYSICS_GUN, CAMERA = 'weapon_physgun', 'gmod_camera'
 local SLOT, INV_PREV, INV_NEXT, ATTACK, ATTACK2 = 'slot', 'invprev', 'invnext', '+attack', '+attack2'
@@ -304,7 +305,7 @@ end
 
 -- select
 UnintrusiveBindPress.add('gsrchud', function(_player, bind, pressed, code)
-  if hud_fastswitch:GetBool() or LocalPlayer():InVehicle() or not GSRCHUD.isEnabled() or not GSRCHUD.config.getWeapon_selector() then return end -- ignore if it shouldn't draw
+  if hud_fastswitch:GetBool() or LocalPlayer():InVehicle() or not GSRCHUD.isEnabled() or not GSRCHUD.config.getWeapon_selector() or not GSRCHUD.element.get(HUD_ELEMENT).drawn then return end -- ignore if it shouldn't draw
   if not pressed then return end -- ignore if bind was not pressed
 
   -- check whether the physics gun is in use

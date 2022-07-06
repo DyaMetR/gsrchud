@@ -167,7 +167,7 @@ GSRCHUD.element.register('weapon_selector', {}, ELEMENT)
 -- paint into overlay if the camera is out
 hook.Add('DrawOverlay', GSRCHUD.hookname .. '_overlay', function()
   if not LocalPlayer or not LocalPlayer().GetActiveWeapon then return end -- avoid pre-init errors
-  if not GSRCHUD.isEnabled() or not GSRCHUD.config.getWeapon_selector() then return end -- do not draw if it's disabled
+  if not GSRCHUD.isEnabled() or not GSRCHUD.config.getWeapon_selector() or not ELEMENT.drawn then return end -- do not draw if it's disabled
   local weapon = LocalPlayer():GetActiveWeapon()
   if not IsValid(weapon) or weapon:GetClass() ~= CAMERA or gui.IsGameUIVisible() then return end -- only show with camera out
   ELEMENT:draw()
