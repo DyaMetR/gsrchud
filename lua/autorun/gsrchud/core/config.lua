@@ -101,6 +101,7 @@ GSRCHUD.config.createConVar('highlight', 128, GSRCHUD.config.PARAM_NUMERIC)
 GSRCHUD.config.createConVar('switcherScrollSound', 1, GSRCHUD.config.PARAM_CHECK)
 GSRCHUD.config.createConVar('dynamicSpacing', 1, GSRCHUD.config.PARAM_CHECK)
 GSRCHUD.config.createConVar('consoleWarn', 0, GSRCHUD.config.PARAM_CHECK)
+GSRCHUD.config.createConVar('loadingOnRespawn', 0, GSRCHUD.config.PARAM_CHECK, 'show%s')
 
 --[[------------------------------------------------------------------
   Colouring

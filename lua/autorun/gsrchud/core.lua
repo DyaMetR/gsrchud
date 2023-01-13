@@ -52,7 +52,7 @@ GSRCHUD.shared('elements/death.lua')
 GSRCHUD.shared('elements/damage.lua')
 GSRCHUD.shared('elements/hazards.lua')
 GSRCHUD.include('elements/flashlight.lua')
-GSRCHUD.include('elements/loading.lua')
+GSRCHUD.shared('elements/loading.lua')
 
 -- load third-party add-ons
 local files, directories = file.Find('autorun/gsrchud/add-ons/*.lua', 'LUA')

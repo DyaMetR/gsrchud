@@ -85,6 +85,7 @@ hook.Add('PopulateToolMenu', UID, function()
     panel:CheckBox('Hazards tray', 'gsrchud_hazards')
     panel:CheckBox('Flashlight meter', 'gsrchud_flashlight')
     panel:CheckBox('Loading screen', 'gsrchud_loading')
+		panel:CheckBox('Show loading screen on respawn', 'gsrchud_loadingonrespawn')
     panel:Button('Show loading screen', 'gsrchud_reset_loading')
     panel:CheckBox('Dynamic spacing', 'gsrchud_dynamicspacing')
 
