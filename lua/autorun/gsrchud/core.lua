@@ -123,5 +123,13 @@ hook.Add('HUDPaint', GSRCHUD.hookname, function()
   if localPlayer:Health() > 0 then hadSuit = localPlayer:IsSuitEquipped() end
 
   GSRCHUD.number.run() -- run number logic
-  GSRCHUD.element.draw() -- draw elements
+
+  -- draw elements
+  local filter = TEXFILTER.NONE
+  if GSRCHUD.config.hasTextureFiltering() then filter = TEXFILTER.LINEAR end
+  render.PushFilterMag(filter)
+  render.PushFilterMin(filter)
+  GSRCHUD.element.draw()
+  render.PopFilterMag()
+  render.PopFilterMin()
 end)

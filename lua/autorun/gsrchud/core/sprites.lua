@@ -275,8 +275,10 @@ function GSRCHUD.sprite.draw(sprite, x, y, colour, halign, valign, scale, alpha,
   local dv = 0.5 / (texture.h * scale)
 
   -- apply correction
-  u0, v0 = (u0 - du) / (1 - 2 * du), (v0 - dv) / (1 - 2 * dv)
-  u1, v1 = (u1 - du) / (1 - 2 * du), (v1 - dv) / (1 - 2 * dv)
+  if not GSRCHUD.config.hasTextureFiltering() then
+    u0, v0 = (u0 - du) / (1 - 2 * du), (v0 - dv) / (1 - 2 * dv)
+    u1, v1 = (u1 - du) / (1 - 2 * du), (v1 - dv) / (1 - 2 * dv)
+  end
 
   -- apply alpha
   local _alpha = surface.GetAlphaMultiplier()

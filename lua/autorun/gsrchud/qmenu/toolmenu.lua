@@ -69,6 +69,7 @@ hook.Add('PopulateToolMenu', UID, function()
       themes:AddChoice(theme.name, i)
     end
 
+    panel:CheckBox('Texture filtering', 'gsrchud_filter')
     panel:CheckBox('Draw without suit', 'gsrchud_nosuit')
 
     panel:Help('\nComposition')
