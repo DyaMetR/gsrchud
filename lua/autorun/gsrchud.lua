@@ -1,7 +1,7 @@
 --[[------------------------------------------------------------------
   GoldSrc HUD
-  Version 2.4.1
-  April 16th, 2023
+  Version 2.4.2
+  May 12th, 2023
   Made by DyaMetR
   * full credits found in the details below
 ]]--------------------------------------------------------------------
@@ -14,9 +14,8 @@ GSRCHUD.hookname      = 'gsrchud'
 if CLIENT then
   -- addon information
   GSRCHUD.name      = 'GoldSrc HUD'
-  GSRCHUD.category  = 'DyaMetR'
-  GSRCHUD.version   = '2.4.1'
-  GSRCHUD.date      = 'April 16th, 2023'
+  GSRCHUD.version   = '2.4.2'
+  GSRCHUD.date      = 'May 12th, 2023'
   GSRCHUD.credits   = { -- {name, contribution}
     {'DyaMetR', 'Developer'},
     {'Valve Software', 'Original layout design\nHalf-Life sprites\nCounter-Strike sprites'},

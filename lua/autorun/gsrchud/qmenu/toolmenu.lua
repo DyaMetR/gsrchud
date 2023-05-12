@@ -4,7 +4,7 @@
 
 GSRCHUD.toolmenu = {}
 
-local CATEGORY = 'Options'
+local CATEGORY = 'Utilities'
 local UID = GSRCHUD.hookname
 
 local themes
@@ -59,7 +59,7 @@ end
 -- populate tool menu
 hook.Add('PopulateToolMenu', UID, function()
   -- add option
-  spawnmenu.AddToolMenuOption(CATEGORY, GSRCHUD.category, UID, GSRCHUD.name, nil, nil, function(panel)
+  spawnmenu.AddToolMenuOption(CATEGORY, GSRCHUD.name, UID, 'Settings', nil, nil, function(panel)
     panel:ClearControls()
     panel:CheckBox('Enabled', 'gsrchud_enabled')
     panel:NumSlider('Scale', 'gsrchud_scale', 0, 5, 2)
