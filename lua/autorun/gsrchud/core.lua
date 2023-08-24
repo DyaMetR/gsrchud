@@ -95,7 +95,9 @@ end
   @return {boolean} has suit
 ]]--------------------------------------------------------------------
 function GSRCHUD.hasSuit()
-  return (not GSRCHUD.hook.run(SUIT_HOOK) and not GSRCHUD.config.drawWithNoSuit()) or hadSuit
+  local required = GSRCHUD.hook.run(SUIT_HOOK)
+  if required == nil then return GSRCHUD.config.drawWithNoSuit() or hadSuit end
+  return not required or hadSuit
 end
 
 --[[------------------------------------------------------------------
