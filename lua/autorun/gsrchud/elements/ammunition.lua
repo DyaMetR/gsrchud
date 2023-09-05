@@ -25,6 +25,8 @@ function ELEMENT:draw()
 
   -- select between vehicle and weapon ammunition
   if localPlayer:InVehicle() then
+    local vehicle = localPlayer:GetVehicle()
+    if not vehicle.GetAmmo then return end
     local _primary, _, _ammo = localPlayer:GetVehicle():GetAmmo()
     if _primary <= -1 then return end
     isValid = true
