@@ -17,3 +17,8 @@ GSRCHUD.weapon.inheritSprite('weapon_hl1_handgrenade', 'weapon_handgrenade')
 GSRCHUD.weapon.inheritSprite('weapon_hl1_satchel', 'weapon_satchel')
 GSRCHUD.weapon.inheritSprite('weapon_hl1_tripmine', 'weapon_tripmine')
 GSRCHUD.weapon.inheritSprite('weapon_hl1_snark', 'weapon_snark')
+
+hook.Add('GSRCHUD_ShouldUseHDWeaponIcon', 'gsrchud_hl1sweps', function(weapon)
+    if not weapon.IsHL1Base then return end
+    return weapon:IsHDEnabled()
+end)

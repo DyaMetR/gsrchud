@@ -104,6 +104,25 @@ function THEME:setWeaponSprite(class, idle, selected, noBackground)
 end
 
 --[[------------------------------------------------------------------
+  Assigns sprites or textures to an already existing icon set to
+  act as the HD variant.
+  @param {string} weapon class
+  @param {string|number} sprite name or texture ID of the idle icon
+  @param {string|number} sprite name or texture ID of the selected icon
+]]--------------------------------------------------------------------
+function THEME:setHDWeaponIcon(class, idle, selected)
+  local icon = self.weapons[class]
+  if not icon then return end
+  icon.idle_hd = idle
+  icon.selected_hd = selected
+  
+  -- add to children
+  for _, child in pairs(self.children) do
+    child:setHDWeaponIcon(class, idle, selected)
+  end
+end
+
+--[[------------------------------------------------------------------
   Makes a weapon use the same sprites (and background logic) than another weapon.
   @param {string} weapon class
   @param {string} class of the weapon to take the sprites from
@@ -123,6 +142,8 @@ end
   @param {table} sprites data
     - weapon: idle sprite
     - weapon_s: selected sprite
+    - weapon_hd: idle HD sprite
+    - weapon_hd_s: selected HD sprite
       - texture name
       - x position in file
       - y position in file
@@ -145,6 +166,19 @@ function THEME:addWeaponSprite(class, spriteData, noBackground)
 
   -- link sprites
   self:setWeaponSprite(class, class, selected, noBackground)
+
+  -- create HD sprites if available
+  if spriteData.weapon_hd then
+    local hd = class .. '_hd'
+    local hd_selected = hd .. '_s'
+    self:addSprite(hd, spriteData.weapon_hd[1], spriteData.weapon_hd[2], spriteData.weapon_hd[3], spriteData.weapon_hd[4], spriteData.weapon_hd[5])
+    if spriteData.weapon_hd_s then
+      self:addSprite(hd_selected, spriteData.weapon_hd_s[1], spriteData.weapon_hd_s[2], spriteData.weapon_hd_s[3], spriteData.weapon_hd_s[4], spriteData.weapon_hd_s[5])
+    else
+      hd_selected = hd
+    end
+    self:setHDWeaponIcon(class, hd, hd_selected)
+  end
 
   -- add to children
   for _, child in pairs(self.children) do

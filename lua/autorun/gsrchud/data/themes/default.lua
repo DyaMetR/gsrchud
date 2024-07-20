@@ -7,6 +7,7 @@
 ]]--------------------------------------------------------------------
 
 local BUCKET, HUD1, HUD2, HUD3, HUD4, HUD5, HUD6, HUD7, HUD8, HUD9 = '640bucket', '640hud1', '640hud2', '640hud3', '640hud4', '640hud5', '640hud6', '640hud7', '640hud8', '640hud9'
+local HUD1HD, HUD4HD = '640hud1hd', '640hud4hd'
 local GMOD1, GMOD2, GMOD3, GMOD4, GMOD5, GMOD6 = '640gmod1', '640gmod2', '640gmod3', '640gmod4', '640gmod5', '640gmod6'
 local TFCHUD5, TFCHUD6 = 'tfchud5', 'tfchud6'
 local PAIN0, PAIN1, PAIN2, PAIN3 = '640pain0', '640pain1', '640pain2', '640pain3'
@@ -17,9 +18,11 @@ local THEME = GSRCHUD.theme.create()
 --[[ Files ]]--
 THEME:addTexture(BUCKET, surface.GetTextureID('gsrchud/default/640bucket'), 256, 64)
 THEME:addTexture(HUD1, surface.GetTextureID('gsrchud/default/640hud1'), 256, 256)
+THEME:addTexture(HUD1HD, surface.GetTextureID('gsrchud/default/640hud1hd'), 256, 256)
 THEME:addTexture(HUD2, surface.GetTextureID('gsrchud/default/640hud2'), 256, 256)
 THEME:addTexture(HUD3, surface.GetTextureID('gsrchud/default/640hud3'), 256, 256)
 THEME:addTexture(HUD4, surface.GetTextureID('gsrchud/default/640hud4'), 256, 256)
+THEME:addTexture(HUD4HD, surface.GetTextureID('gsrchud/default/640hud4hd'), 256, 256)
 THEME:addTexture(HUD5, surface.GetTextureID('gsrchud/default/640hud5'), 256, 256)
 THEME:addTexture(HUD6, surface.GetTextureID('gsrchud/default/640hud6'), 256, 256)
 THEME:addTexture(HUD7, surface.GetTextureID('gsrchud/default/640hud7'), 256, 128)
@@ -188,7 +191,9 @@ THEME:addWeaponSprite('weapon_crowbar_hl1', {
 
 THEME:addWeaponSprite('weapon_glock_hl1', {
   weapon = {HUD1, 0, 45, 170, 45},
-  weapon_s = {HUD4, 0, 45, 170, 45}
+  weapon_s = {HUD4, 0, 45, 170, 45},
+  weapon_hd = {HUD1HD, 0, 45, 170, 45},
+  weapon_hd_s = {HUD4HD, 0, 45, 170, 45}
 })
 
 THEME:addWeaponSprite('weapon_357_hl1', {
@@ -198,12 +203,16 @@ THEME:addWeaponSprite('weapon_357_hl1', {
 
 THEME:addWeaponSprite('weapon_mp5_hl1', {
   weapon = {HUD1, 0, 135, 170, 45},
-  weapon_s = {HUD4, 0, 135, 170, 45}
+  weapon_s = {HUD4, 0, 135, 170, 45},
+  weapon_hd = {HUD1HD, 0, 135, 170, 45},
+  weapon_hd_s = {HUD4HD, 0, 135, 170, 45}
 })
 
 THEME:addWeaponSprite('weapon_shotgun_hl1', {
   weapon = {HUD1, 0, 180, 170, 45},
-  weapon_s = {HUD4, 0, 180, 170, 45}
+  weapon_s = {HUD4, 0, 180, 170, 45},
+  weapon_hd = {HUD1HD, 0, 180, 170, 45},
+  weapon_hd_s = {HUD4HD, 0, 180, 170, 45}
 })
 
 THEME:addWeaponSprite('weapon_crossbow_hl1', {

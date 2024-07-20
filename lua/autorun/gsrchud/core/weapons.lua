@@ -136,6 +136,7 @@ function GSRCHUD.weapon.draw(x, y, weapon, selected, colour, scale, alpha, theme
   local _theme = GSRCHUD.theme.get(theme)
   local class = weapon:GetClass()
   local icon = _theme.weapons[class] or GSRCHUD.theme.default().weapons[class]
+  local isHD = hook.Run('GSRCHUD_ShouldUseHDWeaponIcon', weapon)
 
   -- check if the icon was inherited from another weapon
   if icon and isstring(icon) then
@@ -175,8 +176,8 @@ function GSRCHUD.weapon.draw(x, y, weapon, selected, colour, scale, alpha, theme
     end
   else -- otherwise, search for the correct icon
     if icon.isSprite then
-      local sprite = icon.idle
-      if selected then sprite = icon.selected end
+      local sprite = isHD and icon.idle_hd or icon.idle
+      if selected then sprite = isHD and icon.selected_hd or icon.selected end
       GSRCHUD.sprite.draw(sprite, x + frameW * .5, y + frameH * .5, colour, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, scale, alpha, theme)
     elseif icon.isDynamic then
       icon.func(x + frameW * .5, y + frameH * .5, weapon, selected, colour, scale, alpha, theme)
